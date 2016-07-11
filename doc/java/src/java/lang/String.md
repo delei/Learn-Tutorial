@@ -46,7 +46,6 @@ public final class String
 >类本身为final<br/>
 >存储值的char[]非final修饰<br/>
 >自身的很多方法都有synchronized
-
 咋一看,StringBuffer也是final修饰的类
 
 ```
