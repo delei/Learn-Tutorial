@@ -1,4 +1,4 @@
-package cn.delei.java.lang;
+package cn.delei.jdk.java.lang;
 
 public class StringD {
     public static void main(String[] args) {
