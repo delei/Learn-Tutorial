@@ -13,9 +13,9 @@ public class ReferenceDemo {
 
     public static void main(String[] args) {
         // 设置启动类 JVM 参数-Xmx20M -Xms20M
-        //strongReferenceTest();
-        //softReferenceTest();
-        //weakReferenceTest();
+        strongReferenceTest();
+//        softReferenceTest();
+        weakReferenceTest();
     }
 
     /**
@@ -74,18 +74,26 @@ public class ReferenceDemo {
         System.out.println("SoftRerference.get() : " + reference.get());
 
         // 实例化一个新10M的数组,使内存不够用,并建立软引用
-        SoftReference<Object> reference2 = new SoftReference(new byte[10 * ReferenceDemo.M]);
+        SoftReference<Object> reference2 = new SoftReference(new byte[12 * ReferenceDemo.M]);
         PrintUtil.printDivider("实例化一个新的10M的数组后");
         PrintUtil.printlnMemory(M);
         System.out.println("SoftRerference.get() : " + reference.get());
         System.out.println("SoftRerference2.get() : " + reference2.get());
+
+        // 强制断开
+        reference2 = null;
+        PrintUtil.printDivider("强制断开，GC后");
+        System.gc();
+        PrintUtil.printlnMemory(M);
+        System.out.println("SoftRerference.get() : " + reference);
+        System.out.println("SoftRerference2.get() : " + reference2);
     }
 
     /**
-     * 软引用 SoftReference 测试方法
+     * 弱引用 WeakReference 测试方法
      */
     private static void weakReferenceTest() {
-        // 软引用 SoftReference
+        // 弱引用 WeakReference
         PrintUtil.printTitle("弱引用 WeakReference");
         PrintUtil.printDivider("初始可用内存和总内存");
         PrintUtil.printlnMemory(M);

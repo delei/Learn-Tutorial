@@ -10,14 +10,14 @@ public class PrintUtil {
      * 打印长分割线
      */
     public static void printTitle() {
-        System.out.println(">====================================================================<");
+        System.out.println(">---------------------------------------------<");
     }
 
     /**
      * 打印子分割线
      */
     public static void printDivider() {
-        System.out.println("-----------------------------------");
+        System.out.println("***************************************");
     }
 
     public static void printDivider(String title) {
@@ -37,9 +37,9 @@ public class PrintUtil {
      */
     public static void printTitle(String title) {
         if (StrUtil.isNotBlank(title)) {
-            System.out.print(">=======[ ");
+            System.out.print(">---------[ ");
             System.out.printf("%-10s", title);
-            System.out.println(" ]====================================================<");
+            System.out.println(" ]----------------------------------------------<");
         } else {
             printTitle();
         }
