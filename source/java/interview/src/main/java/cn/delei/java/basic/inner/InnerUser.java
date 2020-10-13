@@ -1,8 +1,11 @@
 package cn.delei.java.basic.inner;
 
-public class InnerUser {
+import java.io.Serializable;
+
+public class InnerUser implements Serializable {
     private String name;
     private int age;
+    private transient String password;
 
     public InnerUser() {
     }
@@ -21,5 +24,13 @@ public class InnerUser {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -1,6 +1,6 @@
 package cn.delei.jdk.java.lang;
 
-public class StringD {
+public class StringDemo {
     public static void main(String[] args) {
 
         String a = "hello";

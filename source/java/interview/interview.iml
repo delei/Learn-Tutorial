@@ -11,5 +11,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: cn.hutool:hutool-all:5.3.10" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.73" level="project" />
   </component>
 </module>
