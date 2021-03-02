@@ -58,9 +58,11 @@ out/
 .idea/
 target/
 *.iml
-*.iws  
+*/.iml
+*.iws 
+*/.iws 
 *.ipr
+*/.ipr
 *.DS_Store
 */.DS_Store
-.flattened-pom.xml
-!/imps-run/src/main/test/com/test/TestSendEmail.java
+*/.flattened-pom.xml
