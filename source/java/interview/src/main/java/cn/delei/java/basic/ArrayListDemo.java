@@ -1,70 +1,141 @@
 package cn.delei.java.basic;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import cn.delei.PrintUtil;
+import cn.hutool.core.date.StopWatch;
+
+import java.util.*;
 
 public class ArrayListDemo {
 
-    public static void main(String[] args){
-        ArrayList<Integer> arrayList = new ArrayList<Integer>();
+    public static ArrayList<Integer> dataList = new ArrayList<>();
 
-        System.out.printf("Before add:arrayList.size() = %d\n",arrayList.size());
+    public static void main(String[] args) {
+//        print();
+//        subList();
+        failFast();
+    }
 
-        arrayList.add(1);
-        arrayList.add(3);
-        arrayList.add(5);
-        arrayList.add(7);
-        arrayList.add(9);
-        System.out.printf("After add:arrayList.size() = %d\n",arrayList.size());
 
-        System.out.println("Printing elements of arrayList");
-        // 三种遍历方式打印元素
-        // 第一种：通过迭代器遍历
-        System.out.print("通过迭代器遍历:");
-        Iterator<Integer> it = arrayList.iterator();
-        while(it.hasNext()){
-            System.out.print(it.next() + " ");
+    /**
+     * 遍历
+     */
+    static void print() {
+        dataList = new ArrayList<>();
+        for (int i = 0; i < 1000000; i++) {
+            dataList.add(i);
         }
-        System.out.println();
-
-        // 第二种：通过索引值遍历
-        System.out.print("通过索引值遍历:");
-        for(int i = 0; i < arrayList.size(); i++){
-            System.out.print(arrayList.get(i) + " ");
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("普通 For 循环");
+        for (int i = 0; i < dataList.size(); i++) {
         }
-        System.out.println();
-
-        // 第三种：for循环遍历
-        System.out.print("for循环遍历:");
-        for(Integer number : arrayList){
-            System.out.print(number + " ");
+        stopWatch.stop();
+        stopWatch.start("增强 For 循环");
+        for (Integer i : dataList) {
         }
+        stopWatch.stop();
 
-        // toArray用法
-        // 第一种方式(最常用)
-        Integer[] integer = arrayList.toArray(new Integer[0]);
+        stopWatch.start("Foreach 循环");
+        dataList.forEach(System.out::println);
+        stopWatch.stop();
 
-        // 第二种方式(容易理解)
-        Integer[] integer1 = new Integer[arrayList.size()];
-        arrayList.toArray(integer1);
+        stopWatch.start("Iterator 循环");
+        Iterator<Integer> iterator = dataList.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+        stopWatch.stop();
 
-        // 抛出异常，java不支持向下转型
-        //Integer[] integer2 = new Integer[arrayList.size()];
-        //integer2 = arrayList.toArray();
-        System.out.println();
+        stopWatch.start("Steam 循环");
+        dataList.stream().forEach(System.out::println);
+        stopWatch.stop();
 
-        // 在指定位置添加元素
-        arrayList.add(2,2);
-        // 删除指定位置上的元素
-        arrayList.remove(2);
-        // 删除指定元素
-        arrayList.remove((Object)3);
-        // 判断arrayList是否包含5
-        System.out.println("ArrayList contains 5 is: " + arrayList.contains(5));
+        System.err.println(stopWatch.prettyPrint());
+    }
 
-        // 清空ArrayList
-        arrayList.clear();
-        // 判断ArrayList是否为空
-        System.out.println("ArrayList is empty: " + arrayList.isEmpty());
+    static void subList() {
+        dataList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            dataList.add(i);
+        }
+        List<Integer> subList = dataList.subList(1, 5);
+        subList.add(20);
+        subList.remove(3);
+        subList.forEach(System.out::println);
+        PrintUtil.printDivider();
+        dataList.forEach(System.out::println);
+        // 强制转换
+        ArrayList<Integer> transferList = (ArrayList<Integer>) subList;
+    }
+
+    /**
+     * fail-fast
+     */
+    static void failFast() {
+        dataList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            dataList.add(i);
+        }
+        // 非Iterator遍历(单线程)
+        PrintUtil.printDivider("非Iterator遍历(单线程)");
+        for (int i = 0; i < dataList.size(); i++) {
+            if (i == 3) {
+                dataList.remove(i);
+            }
+            System.out.println(dataList.get(i));
+        }
+        PrintUtil.printDivider("Iterator 遍历(单线程)");
+        // Iterator 单线程
+        try {
+            int index = 0;
+            Iterator<Integer> iterator = dataList.iterator();
+            while (iterator.hasNext()) {
+                if (index == 3) {
+                    dataList.remove(index);
+                }
+                System.out.println(iterator.next());
+                index++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        PrintUtil.printDivider("Iterator 遍历(多线程)");
+        // Iterator 多线程
+        Thread01 thread01 = new Thread01();
+        Thread02 thread02 = new Thread02();
+        thread01.setName("thread01");
+        thread02.setName("thread02");
+        thread01.start();
+        thread02.start();
+    }
+
+    static class Thread01 extends Thread {
+        @Override
+        public void run() {
+            Iterator<Integer> iterator = dataList.iterator();
+            while (iterator.hasNext()) {
+                System.out.println(this.getName() + ":" + iterator.next());
+            }
+            super.run();
+        }
+    }
+
+    static class Thread02 extends Thread {
+        int i = 0;
+
+        @Override
+        public void run() {
+            try {
+                while (i < 10) {
+                    System.out.println(this.getName() + ":" + i);
+                    if (i == 3) {
+                        dataList.remove(i);
+                    }
+                    Thread.sleep(2000);
+                }
+                i++;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
