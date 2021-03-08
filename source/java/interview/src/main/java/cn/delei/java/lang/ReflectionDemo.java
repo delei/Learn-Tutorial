@@ -1,7 +1,7 @@
-package cn.delei.java.basic;
+package cn.delei.java.lang;
 
 import cn.delei.PrintUtil;
-import cn.delei.java.basic.inner.InnerUser;
+import cn.delei.java.lang.inner.InnerUser;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,7 +15,7 @@ public class ReflectionDemo {
             System.out.printf("%-10s", "对象：");
             System.out.println(new InnerUser().getClass());
             System.out.printf("%-10s", "Class Name：");
-            System.out.println(Class.forName("cn.delei.java.basic.inner.InnerUser"));
+            System.out.println(Class.forName("cn.delei.java.util.inner.InnerUser"));
 
             Class<InnerUser> innerUserClass = InnerUser.class;
             // 类名打印

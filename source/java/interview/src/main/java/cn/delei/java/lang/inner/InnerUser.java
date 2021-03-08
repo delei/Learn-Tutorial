@@ -1,4 +1,4 @@
-package cn.delei.java.basic.inner;
+package cn.delei.java.lang.inner;
 
 import java.io.Serializable;
 

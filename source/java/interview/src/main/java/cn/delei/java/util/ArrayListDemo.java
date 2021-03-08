@@ -1,4 +1,4 @@
-package cn.delei.java.basic;
+package cn.delei.java.util;
 
 import cn.delei.PrintUtil;
 import cn.hutool.core.date.StopWatch;
