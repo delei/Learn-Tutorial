@@ -1,4 +1,4 @@
-package cn.delei.java.basic;
+package cn.delei.java.util;
 
 import java.util.Arrays;
 import java.util.List;

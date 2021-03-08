@@ -1,4 +1,4 @@
-package cn.delei.java.basic;
+package cn.delei.java.lang;
 
 import cn.hutool.core.date.StopWatch;
 
