@@ -7,7 +7,8 @@ public class ThreadDemo {
     public static void main(String[] args) throws Exception {
         // 打印主线程
         Thread currentThread = Thread.currentThread();
-        System.out.printf("主线程为:ID[%s],Name[%s]\n", currentThread.getId(), currentThread.getName());
+        System.out.printf("主线程为:ID[%s],Name[%s],Priority[%s]\n", currentThread.getId(), currentThread.getName()
+                , currentThread.getPriority());
 //        createThread();
         threadState();
     }
@@ -36,7 +37,8 @@ public class ThreadDemo {
         Thread thread03 = new Thread(futureTask);
         thread03.setName("thread03");
         thread03.start();
-        System.out.printf("ID[%s],Name[%s] get:%s", thread03.getId(), thread03.getName(), futureTask.get());
+        System.out.printf("ID[%s],Name[%s],Priority[%s],Get:%s", thread03.getId(), thread03.getName()
+                , thread03.getPriority(), futureTask.get());
     }
 
     static void threadState() throws Exception {
@@ -45,11 +47,19 @@ public class ThreadDemo {
         });
         testThread.setName("testThread");
         // thread info
-        System.out.printf("Thread:ID[%s],Name[%s]\n", testThread.getId(), testThread.getName());
+        System.out.printf("Thread:ID[%s],Name[%s],Priority[%s]\n", testThread.getId(), testThread.getName()
+                , testThread.getPriority());
         System.out.printf("Thread:State[%s]\n", testThread.getState());
         // start();
         testThread.start();
+        System.out.println(testThread.isAlive());
         System.out.printf("after start():State[%s]\n", testThread.getState());
+        while (true) {
+            if (!testThread.isAlive()) {
+                System.out.printf("isAlive false:State[%s]\n", testThread.getState());
+                return;
+            }
+        }
 
     }
 
