@@ -13,7 +13,7 @@ public class StringDemo {
 //        stringNewMethod();
 //        stringLength();
 //        stringAppend(100);
-        stringAppend(10000);
+//        stringAppend(10000);
 //        stringAppend(100000);
     }
 
