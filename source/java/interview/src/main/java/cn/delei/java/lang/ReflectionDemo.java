@@ -3,6 +3,7 @@ package cn.delei.java.lang;
 import cn.delei.PrintUtil;
 import cn.delei.java.lang.inner.InnerUser;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -15,7 +16,7 @@ public class ReflectionDemo {
             System.out.printf("%-10s", "对象：");
             System.out.println(new InnerUser().getClass());
             System.out.printf("%-10s", "Class Name：");
-            System.out.println(Class.forName("cn.delei.java.util.inner.InnerUser"));
+            System.out.println(Class.forName("cn.delei.java.lang.inner.InnerUser"));
 
             Class<InnerUser> innerUserClass = InnerUser.class;
             // 类名打印
@@ -23,6 +24,7 @@ public class ReflectionDemo {
             System.out.println(innerUserClass.getName());
             System.out.println(innerUserClass.getSimpleName());
             System.out.println(innerUserClass.getCanonicalName());
+            System.out.println(innerUserClass.getSuperclass());
             // 类字段属性
             PrintUtil.printTitle("类属性输出");
             for (Field f : innerUserClass.getDeclaredFields()) {
@@ -32,6 +34,8 @@ public class ReflectionDemo {
             for (Field f : innerUserClass.getFields()) {
                 System.out.println(f.getName());
             }
+            // 类构造
+            Constructor<InnerUser> constructor=innerUserClass.getConstructor();
             // 类方法
             PrintUtil.printTitle("类方法输出");
             String methodName;
