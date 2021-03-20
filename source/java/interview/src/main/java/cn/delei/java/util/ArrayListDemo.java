@@ -5,6 +5,10 @@ import cn.hutool.core.date.StopWatch;
 
 import java.util.*;
 
+/**
+ * java.lang.util.ArrayList
+ * @author deleiguo
+ */
 public class ArrayListDemo {
 
     public static ArrayList<Integer> dataList = new ArrayList<>();

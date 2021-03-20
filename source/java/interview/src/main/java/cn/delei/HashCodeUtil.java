@@ -6,6 +6,7 @@ import java.util.List;
 /**
  * HashCode 相关工具类
  * <p>生成相同 HashCode 的字符串https://notes.mengxin.science/2018/01/20/how-to-generate-strings-with-same-hashcode/</p>
+ * @author deleiguo
  */
 public class HashCodeUtil {
     private static String[] base = new String[]{"Aa", "BB"};

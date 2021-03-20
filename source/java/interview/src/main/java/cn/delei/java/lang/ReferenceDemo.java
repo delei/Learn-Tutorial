@@ -7,6 +7,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * 引用相关
+ * @author deleiguo
  */
 public class ReferenceDemo {
     public final static int M = 1024 * 1024;

@@ -1,5 +1,9 @@
 package cn.delei.java.lang;
 
+/**
+ * 自动拆装箱
+ * @author deleiguo
+ */
 public class AutoBoxDemo {
     public static void main(String[] args) {
         // 自动装箱
@@ -22,7 +26,5 @@ public class AutoBoxDemo {
         System.out.printf("128 == (i6+i7):%s \n", 128 == (i6 + i7));
         // 先进行拆箱，+运算结果后装箱，进行equals比较
         System.out.printf("i6.equals(i6+i7):%s \n", i6.equals(i6 + i7));
-
-
     }
 }

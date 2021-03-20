@@ -1,5 +1,9 @@
 package cn.delei.java.lang;
 
+/**
+ * 语法糖
+ * @author deleiguo
+ */
 public class SyntacticSugarDemo {
 
     public static void main(String[] args) {

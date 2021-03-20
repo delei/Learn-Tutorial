@@ -3,6 +3,10 @@ package cn.delei.java.util;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Lambda Demo
+ * @author deleiguo
+ */
 public class LambdaDemo {
 
     @FunctionalInterface
@@ -13,7 +17,6 @@ public class LambdaDemo {
 
         void methodA();
     }
-
 
     public static void main(String[] args) {
         List<String> dataList = Arrays.asList("a", "b", "c");

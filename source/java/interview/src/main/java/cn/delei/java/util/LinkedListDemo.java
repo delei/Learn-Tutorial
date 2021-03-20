@@ -6,6 +6,10 @@ import cn.hutool.core.date.StopWatch;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+/**
+ * java.util.LinkedList
+ * @author deleiguo
+ */
 public class LinkedListDemo {
 
     public static LinkedList<Integer> dataList = new LinkedList<>();

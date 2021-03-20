@@ -3,6 +3,10 @@ package cn.delei.java.lang;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
+/**
+ * java.lang.Thread
+ * @author deleiguo
+ */
 public class ThreadDemo {
     public static void main(String[] args) throws Exception {
         // 打印主线程

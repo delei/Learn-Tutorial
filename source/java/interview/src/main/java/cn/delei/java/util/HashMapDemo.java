@@ -8,6 +8,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/**
+ * java.util.HashMap Demo
+ * @author deleiguo
+ */
 public class HashMapDemo {
 
     public static HashMap<String, String> hashMap;

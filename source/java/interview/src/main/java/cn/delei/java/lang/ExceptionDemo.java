@@ -2,6 +2,10 @@ package cn.delei.java.lang;
 
 import cn.hutool.core.date.StopWatch;
 
+/**
+ * Exception Demo
+ * @author deleiguo
+ */
 public class ExceptionDemo {
 
     private int times;

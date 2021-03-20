@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 打印相关工具类
+ * @author deleiguo
  */
 public class PrintUtil {
     /**
@@ -48,7 +49,7 @@ public class PrintUtil {
     /**
      * 打印Free Memory
      *
-     * @param tag
+     * @param memory
      */
     public static void printlnMemory(int memory) {
         Runtime runtime = Runtime.getRuntime();

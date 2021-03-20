@@ -1,10 +1,9 @@
-/*
- * All rights Reserved, Designed By DataDriver
- * Copyright:    DataDriver.Inc
- * Company:      Zhuo Wo NetWork Technology (ShangHai) CO.LTD
- */
 package cn.delei.java.lang;
 
+/**
+ * 类加载
+ * @author deleiguo
+ */
 public class ClassLoaderDemo {
     public static void main(String[] args) {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();

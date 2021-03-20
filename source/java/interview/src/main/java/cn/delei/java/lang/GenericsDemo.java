@@ -2,30 +2,6 @@ package cn.delei.java.lang;
 
 import cn.delei.PrintUtil;
 
-class User<A> {
-    private A name;
-
-    public A getName() {
-        return name;
-    }
-
-    public void setName(A name) {
-        this.name = name;
-    }
-}
-
-class Info<B extends Number> {
-    private B name;
-
-    public B getName() {
-        return name;
-    }
-
-    public void setName(B name) {
-        this.name = name;
-    }
-}
-
 /**
  * 泛型
  * <p>常用的字母表示含义：</p>
@@ -37,6 +13,7 @@ class Info<B extends Number> {
  *     <li>N - Number（数值类型）</li>
  *     <li>？ -  表示不确定的java类型</li>
  * </ul>
+ * @author deleiguo
  */
 public class GenericsDemo {
     public static void main(String[] args) {
@@ -83,3 +60,29 @@ public class GenericsDemo {
         System.out.println(obj);
     }
 }
+
+
+class User<A> {
+    private A name;
+
+    public A getName() {
+        return name;
+    }
+
+    public void setName(A name) {
+        this.name = name;
+    }
+}
+
+class Info<B extends Number> {
+    private B name;
+
+    public B getName() {
+        return name;
+    }
+
+    public void setName(B name) {
+        this.name = name;
+    }
+}
+

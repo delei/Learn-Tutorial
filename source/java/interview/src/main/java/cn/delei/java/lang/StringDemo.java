@@ -5,6 +5,10 @@ import cn.hutool.core.date.StopWatch;
 
 import java.nio.charset.Charset;
 
+/**
+ * String
+ * @author deleiguo
+ */
 public class StringDemo {
     public static void main(String[] args) {
 //        stringObject();

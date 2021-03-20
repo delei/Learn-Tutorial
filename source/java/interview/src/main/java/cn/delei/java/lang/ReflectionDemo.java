@@ -7,6 +7,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+/**
+ * 反射
+ * @author deleiguo
+ */
 public class ReflectionDemo {
     public static void main(String[] args) {
         try {
