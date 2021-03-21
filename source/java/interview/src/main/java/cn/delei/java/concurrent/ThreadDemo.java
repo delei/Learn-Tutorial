@@ -1,8 +1,7 @@
-package cn.delei.java.currency;
+package cn.delei.java.concurrent;
 
 import cn.delei.PrintUtil;
 
-import java.io.Serializable;
 import java.util.concurrent.*;
 
 class WorkThreadRunnable implements Runnable {
