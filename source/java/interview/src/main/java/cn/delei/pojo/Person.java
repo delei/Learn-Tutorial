@@ -1,13 +1,23 @@
-package cn.delei.java.lang.inner;
+package cn.delei.pojo;
 
 import java.io.Serializable;
 
-public class InnerUser implements Serializable {
+/**
+ * POJO 类
+ * @author deleiguo
+ */
+public class Person implements Serializable {
+    /**
+     * 姓名
+     */
     private String name;
+    /**
+     * 年龄
+     */
     private int age;
     private transient String password;
 
-    public InnerUser() {
+    public Person() {
     }
 
     public String getName() {
@@ -32,5 +42,14 @@ public class InnerUser implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
