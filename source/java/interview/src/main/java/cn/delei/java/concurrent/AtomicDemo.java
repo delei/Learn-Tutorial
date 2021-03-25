@@ -25,8 +25,8 @@ public class AtomicDemo {
 //            atomicIntegerDemo();
 //            atomicIntegerArrayDemo();
 //            atomicReferenceDemo();
-//            ABADemo();
-            atomicStampedReferenceDemo();
+            ABADemo();
+//            atomicStampedReferenceDemo();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,16 +125,29 @@ public class AtomicDemo {
         final AtomicInteger atomicInteger = new AtomicInteger(20);
         // 线程01
         new Thread(() -> {
-            atomicInteger.compareAndSet(20, 21);
-            atomicInteger.compareAndSet(21, 20);
-            System.out.printf("%s\t:20->21->20\n", Thread.currentThread().getName());
+            System.out.printf("%s\t Tread Start!\n", Thread.currentThread().getName());
+            // 暂停线程3秒，让线程02同时启动
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            boolean flag = atomicInteger.compareAndSet(20, 21);
+            if (flag) {
+                flag = atomicInteger.compareAndSet(21, 20);
+                if (flag) {
+                    System.out.printf("%s\t 完成ABA操作:20->21->20\n", Thread.currentThread().getName());
+                }
+            }
+
         }, "Thread01").start();
 
         // 线程02
         new Thread(() -> {
-            // 暂停1秒钟线程02，保证线程01完成了一次ABA操作
+            System.out.printf("%s\t Tread Start!\n", Thread.currentThread().getName());
+            // 暂停10秒钟线程02，保证线程01完成了一次ABA操作
             try {
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.SECONDS.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -142,7 +155,7 @@ public class AtomicDemo {
             // ABA实际上已经变化过一次了，部分业务场景中可能不应该允许成功
             // 简单判断值在需要判断是否有改变的场景不适用，例如判断是否有变化(修改过)，判断是否已存在修改等
             boolean flag = atomicInteger.compareAndSet(20, 30);
-            System.out.printf("%s\tcompareAndSet result=%s, value = %s", Thread.currentThread().getName(), flag, atomicInteger.get());
+            System.out.printf("%s\t compareAndSet result=%s, value = %s", Thread.currentThread().getName(), flag, atomicInteger.get());
         }, "Thread02").start();
     }
 
