@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * POJO 类
+ *
  * @author deleiguo
  */
 public class Person implements Serializable {
@@ -18,6 +19,13 @@ public class Person implements Serializable {
     private transient String password;
 
     public Person() {
+    }
+
+    public Person(String name, int age, String password) {
+        super();
+        this.name = name;
+        this.age = age;
+        this.password = password;
     }
 
     public String getName() {

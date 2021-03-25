@@ -17,7 +17,11 @@ public class Teacher implements Serializable {
      */
     private int age;
 
-    public Teacher() {
+    public Teacher(){}
+
+    public Teacher(String name, int age) {
+        this.name = name;
+        this.age = age;
     }
 
     public String getName() {
