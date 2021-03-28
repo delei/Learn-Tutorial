@@ -9,8 +9,8 @@ import cn.delei.PrintUtil;
  */
 public class BinaryDemo {
     public static void main(String[] args) {
-        binaryDemo(666);
-        bitwiseOperator();
+//        binaryDemo(666);
+//        bitwiseOperator();
         useCase();
     }
 
@@ -87,7 +87,7 @@ public class BinaryDemo {
         System.out.printf("i是否为偶数: %s\n", (i & 1) == 0);
         System.out.printf("j是否为偶数: %s\n", (j & 1) == 0);
         PrintUtil.printDivider();
-        // 交换值(不需要中间新的变量)
+        // 交换值(不需要中间变量)
         i = i ^ j;
         j = i ^ j;
         i = i ^ j;
