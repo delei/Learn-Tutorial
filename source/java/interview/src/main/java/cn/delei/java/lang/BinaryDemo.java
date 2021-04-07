@@ -87,7 +87,7 @@ public class BinaryDemo {
         System.out.printf("i是否为偶数: %s\n", (i & 1) == 0);
         System.out.printf("j是否为偶数: %s\n", (j & 1) == 0);
         PrintUtil.printDivider();
-        // 交换值(不需要中间变量)
+        // 交换两个数的值（不借助第三方变量）
         i = i ^ j;
         j = i ^ j;
         i = i ^ j;
