@@ -41,8 +41,30 @@ public class ThreadDemo {
     }
 
     public static void main(String[] args) throws Exception {
+        currentThread();
         // threadCreate();
-        threadStartHappenBefore();
+//        threadStartHappenBefore();
+    }
+
+    /**
+     * 启动main实际currentThread启动了多少Thread
+     */
+    static void currentThread() {
+        ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
+        while (currentGroup.getParent() != null) {
+            // 返回此线程组的父线程组
+            currentGroup = currentGroup.getParent();
+        }
+        //此线程组中活动线程的估计数
+        int noThreads = currentGroup.activeCount();
+        Thread[] lstThreads = new Thread[noThreads];
+        //把对此线程组中的所有活动子组的引用复制到指定数组中。
+        currentGroup.enumerate(lstThreads);
+        System.out.println("线程总数为" + noThreads);
+        for (Thread thread : lstThreads) {
+            System.out.printf("线程id:%s\t 线程名称:%s\t 优先级:%s\t 线程状态:%s\n", thread.getId(), thread.getName(),
+                    thread.getPriority(), thread.getState());
+        }
     }
 
     /**
