@@ -20,7 +20,8 @@ public class ForkJoinPoolDemo {
      * 计算1~10000的和
      */
     static void forkJoinSum() {
-        ForkJoinPool forkJoinPool = new ForkJoinPool();
+//        ForkJoinPool forkJoinPool = new ForkJoinPool();
+        ForkJoinPool forkJoinPool = ForkJoinPool.commonPool();
         Future<Integer> result = forkJoinPool.submit(new SumTask(1, 10000, 500));
         try {
             System.out.println("结果为: " + result.get());
@@ -31,14 +32,18 @@ public class ForkJoinPoolDemo {
         }
     }
 
+    /**
+     * 斐波那契数列 Demo
+     */
     static void fibonacciDemo() {
-        ForkJoinPool forkJoinPool = new ForkJoinPool();
+//        ForkJoinPool forkJoinPool = new ForkJoinPool();
+        ForkJoinPool forkJoinPool = ForkJoinPool.commonPool();
         Integer result = forkJoinPool.invoke(new FibonacciTask(5));
         System.out.println("结果为: " + result);
     }
 
     /**
-     * 两个范围内的数字求和
+     * 两个范围内的数字求和任务
      */
     static class SumTask extends RecursiveTask<Integer> {
         private int threshold = 100;
@@ -94,12 +99,21 @@ public class ForkJoinPoolDemo {
         @Override
         protected Integer compute() {
             if (n <= 1) {
+                // 最早的一个即为n=3拆分位2和1
+                // 第一个数字是1，从1开始的
                 return n;
             }
-            FibonacciTask f1 = new FibonacciTask(n - 1);
-            f1.fork(); // 异步执行子任务
-            FibonacciTask f2 = new FibonacciTask(n - 2);
-            return f2.compute() + f1.join();//join表示f1等待f2完成并返回计算结果
+            FibonacciTask f1 = new FibonacciTask(n - 1);// 获取当前n的前一个数字
+            f1.fork(); //提交任务到任务队列workQueue
+            FibonacciTask f2 = new FibonacciTask(n - 2);// 获取当前n的前第二个数字
+
+            // F(n)=F(n-1)+F(n-2),每个数是前两个数之和，得到计算结果即可返回
+            int f2Result = f2.compute(); //f2计算结果
+            int f1Result = f1.join(); //f1使用join阻塞，即等待f2完成并返回计算结果
+            int result = f2.compute() + f1.join();
+            System.out.printf("f1=%s\t f2=%s\t result=%s\n", f1Result,
+                    f2Result, result);
+            return result;
         }
     }
 }
