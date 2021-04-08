@@ -1,7 +1,14 @@
 package cn.delei.java.concurrent;
 
 import cn.delei.PrintUtil;
+import cn.hutool.core.date.StopWatch;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 
 class WorkThreadRunnable implements Runnable {
@@ -41,15 +48,16 @@ public class ThreadDemo {
     }
 
     public static void main(String[] args) throws Exception {
-        currentThread();
+//        currentThread();
         // threadCreate();
-//        threadStartHappenBefore();
+        threadStartHappenBefore();
     }
 
     /**
      * 启动main实际currentThread启动了多少Thread
      */
     static void currentThread() {
+        PrintUtil.printDivider("输入所有线程状态");
         ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
         while (currentGroup.getParent() != null) {
             // 返回此线程组的父线程组
@@ -128,9 +136,6 @@ public class ThreadDemo {
     }
 
     private static void printThreadInfo(Thread thread) {
-        System.out.println("线程唯一标识符：" + thread.getId());
-        System.out.println("线程名称：" + thread.getName());
-        System.out.println("线程状态：" + thread.getState());
-        System.out.println("线程优先级：" + thread.getPriority());
+        System.out.printf("%s\t%s\tState=%s\t\n", thread.getId(), thread.getName(), thread.getState());
     }
 }
