@@ -110,7 +110,7 @@ public class ForkJoinPoolDemo {
             // F(n)=F(n-1)+F(n-2),每个数是前两个数之和，得到计算结果即可返回
             int f2Result = f2.compute(); //f2计算结果
             int f1Result = f1.join(); //f1使用join阻塞，即等待f2完成并返回计算结果
-            int result = f2.compute() + f1.join();
+            int result = f2Result + f1Result;
             System.out.printf("f1=%s\t f2=%s\t result=%s\n", f1Result,
                     f2Result, result);
             return result;
