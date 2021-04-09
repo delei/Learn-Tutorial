@@ -1,11 +1,10 @@
 package cn.delei.java.concurrent;
 
-import cn.delei.PrintUtil;
+import cn.delei.util.PrintUtil;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -43,8 +42,8 @@ public class ThreadStatusDemo {
         TimeUnit.SECONDS.sleep(PRINT_TIME);
 //        sleepDemo01();
 //        sleepDemo02();
-//        joinDemo01();
-        joinDemo02();
+        joinDemo01();
+//        joinDemo02();
     }
 
     /**
@@ -110,9 +109,21 @@ public class ThreadStatusDemo {
             System.out.printf("==>%-15s\t T01 End\n", format.format(LocalTime.now()));
         }, "T01");
         threadList.add(t01);
+        Thread t02 = new Thread(() -> {
+            System.out.printf("==>%-15s\t T02 Start\n", format.format(LocalTime.now()));
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.printf("==>%-15s\t T02 End\n", format.format(LocalTime.now()));
+        }, "T02");
+        threadList.add(t02);
         t01.start();
+        t02.start();
         try {
             t01.join();
+            t02.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

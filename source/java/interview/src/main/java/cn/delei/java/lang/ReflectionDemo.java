@@ -1,6 +1,6 @@
 package cn.delei.java.lang;
 
-import cn.delei.PrintUtil;
+import cn.delei.util.PrintUtil;
 import cn.delei.pojo.Person;
 
 import java.lang.reflect.Constructor;

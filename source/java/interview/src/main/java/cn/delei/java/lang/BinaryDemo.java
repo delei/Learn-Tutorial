@@ -1,6 +1,6 @@
 package cn.delei.java.lang;
 
-import cn.delei.PrintUtil;
+import cn.delei.util.PrintUtil;
 
 /**
  * 字节、位运算等 Demo

@@ -1,4 +1,4 @@
-package cn.delei;
+package cn.delei.util;
 
 import cn.hutool.core.util.StrUtil;
 

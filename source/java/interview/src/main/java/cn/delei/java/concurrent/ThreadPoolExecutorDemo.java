@@ -1,7 +1,5 @@
 package cn.delei.java.concurrent;
 
-import cn.delei.PrintUtil;
-
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;

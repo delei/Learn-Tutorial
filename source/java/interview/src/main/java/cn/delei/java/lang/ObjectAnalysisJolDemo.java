@@ -1,13 +1,11 @@
 package cn.delei.java.lang;
 
-import cn.delei.PrintUtil;
+import cn.delei.util.PrintUtil;
 import org.openjdk.jol.info.ClassLayout;
 import org.openjdk.jol.info.GraphLayout;
 import org.openjdk.jol.vm.VM;
 
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 使用 OpenJDK Jol 进行对象布局分析

@@ -1,9 +1,12 @@
 package cn.delei.java.concurrent;
 
+import cn.delei.util.PrintUtil;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * CountDownLatch Demo
@@ -11,9 +14,35 @@ import java.util.concurrent.TimeUnit;
  * @author deleiguo
  */
 public class CountDownLatchDemo {
+    private final static DateTimeFormatter format = DateTimeFormatter.ofPattern("hh:mm:ss");
+    private final static long PRINT_TIME = 2L;
+    private static List<Thread> threadList;
+
     public static void main(String[] args) throws Exception {
+        threadList = new ArrayList<>();
+        // 守护线程，定时输入线程状态
+        Thread printThread = new Thread(() -> {
+            for (; ; ) {
+                PrintUtil.printDivider(format.format(LocalTime.now()) + " 守护线程输出");
+                for (Thread thread : threadList) {
+                    System.out.printf("线程id:%s\t 线程名称:%s\t 优先级:%s\t 线程状态:%s\n", thread.getId(), thread.getName(),
+                            thread.getPriority(), thread.getState());
+                }
+                try {
+                    // 每隔秒
+                    TimeUnit.SECONDS.sleep(PRINT_TIME);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "printThread");
+        printThread.setDaemon(true);
+        printThread.start();
+        TimeUnit.SECONDS.sleep(PRINT_TIME);
+
 //        solution01();
-        solution02();
+//        solution02();
+        solution03();
     }
 
     /**
@@ -70,6 +99,42 @@ public class CountDownLatchDemo {
         countDownLatch.countDown();
         System.out.println("执行发令...");
         countDownLatch.countDown();
+    }
+
+    static void solution03() throws InterruptedException {
+        //闸门
+        CountDownLatch startSignal = new CountDownLatch(5);
+        CountDownLatch doneSignal = new CountDownLatch(1);
+        for (int i = 1; i < 6; i++) {
+            threadList.add(new Thread(new CountWorker(startSignal, doneSignal), "T0" + i));
+        }
+        // start
+        threadList.forEach(Thread::start);
+        //
+        System.out.println("==>");
+        startSignal.countDown();
+        doneSignal.await();
+    }
+
+    static class CountWorker implements Runnable {
+        private final CountDownLatch startSignal;
+        private final CountDownLatch doneSignal;
+
+        CountWorker(CountDownLatch startSignal, CountDownLatch doneSignal) {
+            this.startSignal = startSignal;
+            this.doneSignal = doneSignal;
+        }
+
+        @Override
+        public void run() {
+            try {
+                startSignal.countDown();
+                System.out.println("==> " + format.format(LocalTime.now()) + " Start!");
+//                doneSignal.await();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     static class CountList {

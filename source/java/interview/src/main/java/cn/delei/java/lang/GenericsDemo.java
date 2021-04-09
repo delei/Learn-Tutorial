@@ -1,6 +1,6 @@
 package cn.delei.java.lang;
 
-import cn.delei.PrintUtil;
+import cn.delei.util.PrintUtil;
 
 /**
  * 泛型
