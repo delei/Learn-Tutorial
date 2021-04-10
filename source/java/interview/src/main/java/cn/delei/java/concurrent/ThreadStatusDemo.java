@@ -1,6 +1,7 @@
 package cn.delei.java.concurrent;
 
 import cn.delei.util.PrintUtil;
+import cn.delei.util.SimulationUtil;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -135,7 +136,7 @@ public class ThreadStatusDemo {
         Thread t01 = new Thread(() -> {
             System.out.printf("==>%-15s\t T01 Start\n", format.format(LocalTime.now()));
             try {
-                simulationRuntime(5);
+                SimulationUtil.runtime(5);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -146,7 +147,7 @@ public class ThreadStatusDemo {
         Thread t02 = new Thread(() -> {
             System.out.printf("==>%-15s\t T02 Start\n", format.format(LocalTime.now()));
             try {
-                simulationRuntime(10);
+                SimulationUtil.runtime(10);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -168,21 +169,5 @@ public class ThreadStatusDemo {
             e.printStackTrace();
         }
         System.out.printf("==>%-15s\t Main End\n", format.format(LocalTime.now()));
-    }
-
-    /**
-     * 模拟运行时间
-     *
-     * @param second 运行时间单位为秒
-     * @throws Exception
-     */
-    static void simulationRuntime(long second) throws Exception {
-        if (second < 1) {
-            throw new IllegalArgumentException("second must more than 1");
-        }
-        LocalDateTime start = LocalDateTime.now();
-        LocalDateTime end = start.plusSeconds(second);
-        while (LocalDateTime.now().isBefore(end)) {
-        }
     }
 }

@@ -23,9 +23,7 @@ public class PrintUtil {
 
     public static void printDivider(String title) {
         if (StrUtil.isNotBlank(title)) {
-            System.out.print("---------[ ");
-            System.out.printf("%-10s", title);
-            System.out.println(" ]-----------------------");
+            System.out.printf("------------------[\t %-15s \t]------------------\n", title);
         } else {
             printDivider();
         }
@@ -38,9 +36,7 @@ public class PrintUtil {
      */
     public static void printTitle(String title) {
         if (StrUtil.isNotBlank(title)) {
-            System.out.print(">---------[ ");
-            System.out.printf("%-10s", title);
-            System.out.println(" ]----------------------------------------------<");
+            System.out.printf(">------------------[\t %-15s \t]------------------<\n", title);
         } else {
             printTitle();
         }

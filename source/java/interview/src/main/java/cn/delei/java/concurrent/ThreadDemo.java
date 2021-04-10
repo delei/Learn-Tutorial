@@ -1,6 +1,7 @@
 package cn.delei.java.concurrent;
 
 import cn.delei.util.PrintUtil;
+import cn.delei.util.SimulationUtil;
 
 import java.util.concurrent.*;
 
@@ -43,7 +44,8 @@ public class ThreadDemo {
     public static void main(String[] args) throws Exception {
 //        currentThread();
         // threadCreate();
-        threadStartHappenBefore();
+//        threadStartHappenBefore();
+        daemonThread();
     }
 
     /**
@@ -128,7 +130,35 @@ public class ThreadDemo {
         System.out.println(futureTask.get());
     }
 
-    private static void printThreadInfo(Thread thread) {
+    static void daemonThread() {
+        Thread daemonThread = new Thread(() -> {
+            System.out.println("Daemon守护线程 Start!");
+            try {
+                SimulationUtil.runtime(9);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println("Daemon守护线程 End!");
+        }, "Daemon-01");
+        daemonThread.setDaemon(true);
+        daemonThread.start();
+
+        for (int i = 0; i < 3; i++) {
+            new Thread(() -> {
+                System.out.println(Thread.currentThread().getName() + " Start!!");
+                try {
+                    SimulationUtil.runtime(3);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                System.out.println(Thread.currentThread().getName() + " End!!");
+            }).start();
+        }
+        System.out.println("Main Thread end!");
+
+    }
+
+    static void printThreadInfo(Thread thread) {
         System.out.printf("%s\t%s\tState=%s\t\n", thread.getId(), thread.getName(), thread.getState());
     }
 }
