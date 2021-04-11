@@ -48,6 +48,8 @@ public class GenericsDemo {
 
         PrintUtil.printTitle("泛型类型擦除");
         // true
+        System.out.println(u1.getClass().getName());
+        System.out.println(u2.getClass().getName());
         System.out.println(u1.getClass() == u2.getClass());
         // true
         System.out.println(true);
