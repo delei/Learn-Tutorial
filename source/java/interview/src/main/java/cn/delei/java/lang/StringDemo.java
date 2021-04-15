@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
  */
 public class StringDemo {
     public static void main(String[] args) {
-//        stringObject();
+        stringObject();
 //        stringIntern();
 //        stringSplice();
 //        stringNewMethod();

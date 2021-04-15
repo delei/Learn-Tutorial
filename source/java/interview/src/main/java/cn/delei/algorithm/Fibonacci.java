@@ -17,8 +17,9 @@ public class Fibonacci {
     private static final StopWatch stopWatch = new StopWatch();
 
     public static void main(String[] args) {
-        solutionDemo(5); // N比较小
-        solutionDemo(30); // N比较大
+//        solutionDemo(5); // N比较小
+//        solutionDemo(30); // N比较大
+        System.out.println(solution04(19, 98));
         if (!stopWatch.isRunning()) {
             System.out.println(stopWatch.prettyPrint());
         }
@@ -92,6 +93,34 @@ public class Fibonacci {
             sum = a + b;
         }
         return sum;
+    }
+
+    static int solution04(int n, int k) {
+        /**
+         * f(n)=f(n-2)+f(n-1),+ 为拼接
+         * f1=0
+         * f2=1
+         * f3=f1+f2=01
+         * f4=f2+f3=101
+         * f5=f3+f4=01101
+         * f6=f4+f5=10101101
+         */
+        int[] leng = new int[n + 1];
+        leng[0] = 0;
+        leng[1] = leng[2] = 1;
+        for (int i = 1; i <= n; i++) {
+            leng[i] = leng[i - 2] + leng[i - 1];
+        }
+        if (k > leng.length) {
+            return -1;
+        }
+        if (k <= leng[n - 2]) {
+            return solution04(n - 2, k);
+        } else if (k > leng[n - 2]) {
+            return solution04(n - 1, k - leng[n - 2]);
+        }
+        return leng[k];
+
     }
 
 }

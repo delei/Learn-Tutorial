@@ -74,7 +74,7 @@ public class ThreadLocalDemo {
     static void demo02() throws Exception {
         int n = 10;
         ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(2, 4,
-                60L, TimeUnit.SECONDS,
+                0L, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>());
         for (int i = 0; i < n; i++) {
             poolExecutor.execute(() -> {
