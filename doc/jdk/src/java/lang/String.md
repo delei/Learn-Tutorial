@@ -1,115 +1,246 @@
+# String
 
-#### java.lang.String相关
+> 非特殊说明时，源码均基于AdoptOpenJDK 11
+>
+> 作者: DeleiGuo
+> 版权: 本文非特别声明外，均采用 © CC-BY-NC-SA 4.0 许可协议
 
-#### 一、JVM相关
+## 1. 结构
 
-1、栈： 存放基本数据类型及对象变量的引用，对象本身不存放于栈中而是存放于堆中
-
-* 基础类型 byte (8位)、boolean (1位)、char (16位)、int (32位)、short (16位)、float (32位)、double (64位)、long (64位)
-
-* java代码作用域中定义一个变量时，则java就在栈中为这个变量分配内存空间，当该变量退出该作用域时，java会自动释放该变量所占的空间
-
-2、堆： new操作符的对象
-
-* new创建的对象和数组
-
-* 在堆中分配的内存，由Java虚拟机的自动垃圾回收器来管理
-
-3、静态域： static定义的静态成员变量
-
-4、常量池： 存放常量
-
-#### 二、String
-Java中String不是基本数据类型，而是一个final类。
-
-实质为一个final char的数组，既然是final类型，那个该数组引用value就不允许再指向其他对象了，因此只从类的设计角度讲：如果jdk源码中并没有提供对value本身的修改，那么理论上来讲String是不可变的。
-
-```
+```java
 public final class String
-    implements java.io.Serializable, Comparable<String>, CharSequence {
-    /** The value is used for character storage. */
-    private final char value[];
+    implements java.io.Serializable, Comparable<String>, CharSequence
+```
 
-    /** Cache the hash code for the string */
-    private int hash; // Default to 0
+## 2. 属性
 
-    /** use serialVersionUID from JDK 1.0.2 for interoperability */
-    private static final long serialVersionUID = -6849794470754667710L;
+```java
+/** 存储数据的字节数组 */
+private final byte[] value;
 
-    ......
+/** 
+* 编码格式：LATIN1、UTF16
+*/
+private final byte coder;
+
+/** hash值 */
+private int hash; // Default to 0
+
+/** 是否开启字符串压缩,在static 静态初始化块中初始化为 true*/
+static final boolean COMPACT_STRINGS;
+
+/** 字符串压缩的相应静态值，用于判断 */
+@Native static final byte LATIN1 = 0;
+@Native static final byte UTF16  = 1;
+
+```
+
+
+## 3. 方法
+
+### 构造
+
+```java
+/** 无参构造 */
+public String() {
+  // 默认即为空字符
+  this.value = "".value;
+  this.coder = "".coder;
 }
 
-```
-
-#### 三、StringBuffer
-
->类本身为final<br/>
->存储值的char[]非final修饰<br/>
->自身的很多方法都有synchronized
-咋一看,StringBuffer也是final修饰的类
-
-```
-public final class StringBuffer
-    extends AbstractStringBuilder
-    implements java.io.Serializable, CharSequence
-{
-    ......
+/** 常用有参构造*/
+public String(char value[]) {
+  this(value, 0, value.length, null);
 }
-```
 
-实质得去看抽象类AbstractStringBuilder
-String的char[]是final的。但是AbstractStringBuilder类的不是
+/** 常用有参构造*/
+public String(byte[] bytes) {
+  this(bytes, 0, bytes.length);
+}
 
-```
-abstract class AbstractStringBuilder implements Appendable, CharSequence {
-
-    char[] value;
-    int count;
-    AbstractStringBuilder() {
+/** 有参构造 */
+String(char[] value, int off, int len, Void sig) {
+  if (len == 0) {
+    // 如果构建长度为0的字符串即为空字符串
+    this.value = "".value;
+    this.coder = "".coder;
+    return;
+  }
+  if (COMPACT_STRINGS) {
+    // 开启字符串压缩
+    byte[] val = StringUTF16.compress(value, off, len);
+    if (val != null) {
+      this.value = val;
+      this.coder = LATIN1;
+      return;
     }
-    AbstractStringBuilder(int capacity) {
-        value = new char[capacity];
-    }
-
-    ......
+  }
+  this.coder = UTF16;
+  this.value = StringUTF16.toBytes(value, off, len);
 }
 ```
 
-StringBuffer本身的append方法中是加入了synchronized修饰
+### Hash值
+```java
+/** 字符串压缩 */
+private boolean isLatin1() {
+  return COMPACT_STRINGS && coder == LATIN1;
+}
+
+/** 获取hashCode */
+public int hashCode() {
+  int h = hash;
+  if (h == 0 && value.length > 0) {
+    // 均使用31作为乘数进行计算
+    hash = h = isLatin1() ? StringLatin1.hashCode(value)
+      : StringUTF16.hashCode(value);
+  }
+  return h;
+}
+
+/** StringLatin1类中的hashCode方法 */
+public static int hashCode(byte[] value) {
+  int h = 0;
+  for (byte v : value) {
+    h = 31 * h + (v & 0xff);
+  }
+  return h;
+}
+
+/** StringUTF16类中的hashCode方法 */
+public static int hashCode(byte[] value) {
+  int h = 0;
+  int length = value.length >> 1;
+  for (int i = 0; i < length; i++) {
+    h = 31 * h + getChar(value, i);
+  }
+  return h;
+}
+
 ```
-super.append(...);
-```
-这个方法中有一个在AbstractStringBuilder的底层调用：
-```
+
+### 长度相关
+
+```java
+/** 长度为字节数组长度的一半 */
+public static int length(byte[] value) {
+  return value.length >> 1;
+}
+
 /**
- * This implements the expansion semantics of ensureCapacity with no
- * size check or synchronization.
- */
-void expandCapacity(int minimumCapacity) {
-    int newCapacity = value.length * 2 + 2;
-    if (newCapacity - minimumCapacity < 0)
-        newCapacity = minimumCapacity;
-    if (newCapacity < 0) {
-        if (minimumCapacity < 0) // overflow
-            throw new OutOfMemoryError();
-        newCapacity = Integer.MAX_VALUE;
+* 判断value 字节数组长度是否为0
+* 无法判断 null，会抛出 NPE
+*/
+public boolean isEmpty() {
+  return value.length == 0;
+}
+
+/**
+* @since 11
+* JDK11中新增，能够过滤空格" ","\t"等
+* 无法判断 null，会抛出 NPE
+*/
+public boolean isBlank() {
+  return indexOfNonWhitespace() == length();
+}
+
+private int indexOfNonWhitespace() {
+  if (isLatin1()) {
+    return StringLatin1.indexOfNonWhitespace(value);
+  } else {
+    return StringUTF16.indexOfNonWhitespace(value);
+  }
+}
+
+/** StringLatin1类中的indexOfNonWhitespace */
+public static int indexOfNonWhitespace(byte[] value) {
+  int length = value.length;
+  int left = 0;
+  while (left < length) {
+    char ch = (char)(value[left] & 0xff);
+    if (ch != ' ' && ch != '\t' && !Character.isWhitespace(ch)) {
+      break;
     }
-    value = Arrays.copyOf(value, newCapacity);
+    left++;
+  }
+  return left;
+}
+
+/** StringUTF16类中的indexOfNonWhitespace */
+public static int indexOfNonWhitespace(byte[] value) {
+  int length = value.length >> 1;
+  int left = 0;
+  while (left < length) {
+    int codepoint = codePointAt(value, left, length);
+    if (codepoint != ' ' && codepoint != '\t' && !Character.isWhitespace(codepoint)) {
+      break;
+    }
+    left += Character.charCount(codepoint);
+  }
+  return left;
 }
 ```
 
-#### 四、String,StringBuffer,StringBuilder
 
-* 三者在执行速度方面的比较：
-    >StringBuilder >  StringBuffer  >  String
+### intern方法
 
-* String <（StringBuffer，StringBuilder）的原因
-    >String：字符串常量<br/>
-    >StringBuffer：字符变量<br/>
-    >StringBuilder：字符变量
+```java
+/**
+* @return  a string that has the same contents as this string, but is
+*          guaranteed to be from a pool of unique strings.
+* @jls 3.10.5 String Literals
+*
+* native实现
+* 如果常量池中存在当前字符串, 就会直接返回当前字符串. 如果常量池中没有此字符串, 会将此字符串放入常量池中后, 再返回
+*/
+public native String intern();
+```
 
-* StringBuilder与 StringBuffer
-    >StringBuilder：线程非安全的<br/>
-    >StringBuffer：线程安全的，使用synchronized
+### equals重写
 
-当我们在字符串缓冲去被多个线程使用是，JVM不能保证StringBuilder的操作是安全的，虽然他的速度最快，但是可以保证StringBuffer是可以正确操作的。当然大多数情况下就是我们是在单线程下进行的操作，所以大多数情况下是建议用StringBuilder而不用StringBuffer的，就是速度的原因。
+```java
+public boolean equals(Object anObject) {
+  if (this == anObject) { // 判断内存地址是否相同
+    return true;
+  }
+  if (anObject instanceof String) { // 如果是String 实例
+    String aString = (String)anObject; // 强制转换
+    if (coder() == aString.coder()) { // 判断编码相同
+      // 思路：for循环遍历字节数组，匹配相同
+      return isLatin1() ? StringLatin1.equals(value, aString.value)
+        : StringUTF16.equals(value, aString.value);
+    }
+  }
+  return false;
+}
+
+/** StringLatin1类中的equals */
+@HotSpotIntrinsicCandidate
+public static boolean equals(byte[] value, byte[] other) {
+  if (value.length == other.length) {
+    for (int i = 0; i < value.length; i++) {
+      if (value[i] != other[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return false;
+}
+
+/** StringUTF16类中的equals */
+@HotSpotIntrinsicCandidate
+public static boolean equals(byte[] value, byte[] other) {
+  if (value.length == other.length) {
+    int len = value.length >> 1;
+    for (int i = 0; i < len; i++) {
+      if (getChar(value, i) != getChar(other, i)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return false;
+}
+```
+

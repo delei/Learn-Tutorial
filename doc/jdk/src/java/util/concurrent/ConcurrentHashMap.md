@@ -12,6 +12,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
 
 ## 2. 主要属性
 和`HashMap`类不同的属性
+
 ```java
 /**
  * Minimum number of rebinnings per transfer step. Ranges are

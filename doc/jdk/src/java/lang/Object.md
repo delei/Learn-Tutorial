@@ -1,17 +1,21 @@
 # Object
 
-> 非特殊说明时，源码均基于OpenJDK 11
+> 非特殊说明时，源码均基于AdoptOpenJDK 11
+> 
+> 作者: DeleiGuo
+> 版权: 本文非特别声明外，均采用 © CC-BY-NC-SA 4.0 许可协议
 
 ```java
-package java.lang;   
 public class Object {   
 
     /** 一个本地方法，具体是用C（C++）在DLL中实现的，然后通过JNI调用。*/    
     private static native void registerNatives();   
+   
     /** 对象初始化时自动调用此方法*/  
     static {   
         registerNatives();   
     }   
+    
     /** 返回此 Object 的运行时类。*/  
     public final native Class<?> getClass();   
 
@@ -23,7 +27,7 @@ public class Object {
     */
     public native int hashCode();   
 
-    
+    /** 用于比较2个对象的内存地址是否相等 */
     public boolean equals(Object obj) {   
         return (this == obj);   
     }   
@@ -48,8 +52,6 @@ public class Object {
     public final void wait() throws InterruptedException {   
         wait(0L);
     }   
-
-
 
    /** 在其他线程调用此对象的 notify() 方法或 notifyAll() 方法，或者超过指定的时间量前，导致当前线程等待。*/  
     public final native void wait(long timeout) throws InterruptedException;   
