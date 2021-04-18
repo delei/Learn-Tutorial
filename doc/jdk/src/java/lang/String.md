@@ -1,6 +1,6 @@
 # String
 
-> 非特殊说明时，源码均基于AdoptOpenJDK 11
+> 非特殊说明时，源码均基于AdoptOpenJDK
 >
 > 作者: DeleiGuo
 > 版权: 本文非特别声明外，均采用 © CC-BY-NC-SA 4.0 许可协议
@@ -8,6 +8,7 @@
 ## 1. 结构
 
 ```java
+/** final修饰的类，不可变*/
 public final class String
     implements java.io.Serializable, Comparable<String>, CharSequence
 ```
@@ -15,7 +16,7 @@ public final class String
 ## 2. 属性
 
 ```java
-/** 存储数据的字节数组 */
+/** 存储数据的字节数组,final修饰，不可变 */
 private final byte[] value;
 
 /** 
