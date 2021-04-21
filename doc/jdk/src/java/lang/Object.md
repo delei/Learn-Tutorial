@@ -1,6 +1,6 @@
 # Object
 
-> 非特殊说明时，源码均基于AdoptOpenJDK
+> 非特殊说明时，源码均基于AdoptOpenJDK11
 > 
 > 作者: DeleiGuo
 > 版权: 本文非特别声明外，均采用 © CC-BY-NC-SA 4.0 许可协议

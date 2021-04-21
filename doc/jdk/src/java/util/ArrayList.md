@@ -1,143 +1,235 @@
+# java.util.ArrayList
 
-#### java.util.ArrayList
+> 非特殊说明时，源码均基于AdoptOpenJDK11
+>
+> 作者: DeleiGuo
+> 版权: 本文非特别声明外，均采用 © CC-BY-NC-SA 4.0 许可协议
 
-* 基于数组方式实现，无容量限制；
-* 插入元素可能要扩容，删除元素并不会减少数组容量(如希望相应的缩小数组容量，可以调用ArrayList的trinToSize()),在查找元素时要遍历数组，对于非null得元素采取equals的方式寻找；
-* ArrayList是非线程安全的；
+## 1. 结构
 
-######ArrayList:数组方式存放对象
-创建ArrayList(int initialCapacity)
+```java
+public class ArrayList<E> extends AbstractList<E>
+        implements List<E>, RandomAccess, Cloneable, java.io.Serializable
 ```
+
+## 2. 属性
+
+```java
 /**
-* Constructs an empty list with the specified initial capacity.
-*
-* @param  initialCapacity  the initial capacity of the list
-* @throws IllegalArgumentException if the specified initial capacity
-*         is negative
+* Default initial capacity.
+* 默认容量大小为10
 */
-public ArrayList(int ç) {
-   super();
-   if (initialCapacity < 0)
-       throw new IllegalArgumentException("Illegal Capacity: "+initialCapacity);
-   this.elementData = new Object[initialCapacity];
+private static final int DEFAULT_CAPACITY = 10;
+
+/**
+* Shared empty array instance used for empty instances.
+* new ArrayList()无参构建函数时,大小为0
+* 第一次add() 时初始化 elementData 为DEFAULT_CAPACITY
+*/
+private static final Object[] EMPTY_ELEMENTDATA = {};
+
+private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+
+/** 
+* 存储元素的对象数组
+* transient修饰
+*/
+transient Object[] elementData;
+
+/**
+* 实际存储的元素数量
+*/
+private int size;
+
+/** 最大的容量 */
+private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+
+/** ===== 父类AbstractList中的重要属性 ===== */
+/** 修改次数，与 fast-fail 相关 */
+protected transient int modCount = 0;
+```
+
+## 3. 主要方法
+
+### 构造
+
+``` java
+/** 无参构造函数 */
+public ArrayList() {
+  // 默认元素数据为空的对象数组
+  this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
+}
+
+/** 指定初始容量的有参构造函数 */
+public ArrayList(int initialCapacity) {
+  // 判断容量参数并初始化数组
+  if (initialCapacity > 0) {
+    this.elementData = new Object[initialCapacity];
+  } else if (initialCapacity == 0) {
+    this.elementData = EMPTY_ELEMENTDATA;
+  } else {
+    throw new IllegalArgumentException("Illegal Capacity: "+
+                                       initialCapacity);
+  }
 }
 ```
-其中，super方法调用的是AbstractList,在该类中此方法是个protected的空方法；所以，ArrayList的该方法主要是初始化了一个Object的数组，数组大小即为传入的initialCapacity。
 
-######插入对象：add()
-源码：
-```
+### 操作
+
+```java
+/** 添加元素 */
 public boolean add(E e) {
-        ensureCapacityInternal(size + 1);  // Increments modCount!!
-        elementData[size++] = e;
-        return true;
+  modCount++; // 此属性定义于父类AbstractList中
+  add(e, elementData, size);
+  return true;
 }
 
-private void ensureCapacityInternal(int minCapacity) {
-       if (elementData == EMPTY_ELEMENTDATA) {
-           minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);
-       }
-       ensureExplicitCapacity(minCapacity);
+private void add(E e, Object[] elementData, int s) {
+  if (s == elementData.length)
+    elementData = grow(); // 扩容判断
+  elementData[s] = e; // 将元素放入数组相应位置
+  size = s + 1; // size+1
 }
 
-private void ensureExplicitCapacity(int minCapacity) {
-   modCount++;
-
-   // overflow-conscious code
-   if (minCapacity - elementData.length > 0)
-       grow(minCapacity);
+public void add(int index, E element) {
+  rangeCheckForAdd(index); // 数组下标越界检查
+  modCount++;
+  final int s;
+  Object[] elementData;
+  if ((s = size) == (elementData = this.elementData).length)
+    elementData = grow();
+  // 复制数组/移动
+  System.arraycopy(elementData, index,
+                   elementData, index + 1,
+                   s - index);
+  elementData[index] = element;
+  size = s + 1;
 }
 
-private void grow(int minCapacity) {
-    // overflow-conscious code
-    int oldCapacity = elementData.length;
-    int newCapacity = oldCapacity + (oldCapacity >> 1);
-    if (newCapacity - minCapacity < 0)
-        newCapacity = minCapacity;
-    if (newCapacity - MAX_ARRAY_SIZE > 0)
-        newCapacity = hugeCapacity(minCapacity);
-    // minCapacity is usually close to size, so this is a win:
-    elementData = Arrays.copyOf(elementData, newCapacity);
+public E remove(int index) {
+  Objects.checkIndex(index, size); // 数组下标越界检车
+  final Object[] es = elementData;
+
+  @SuppressWarnings("unchecked") E oldValue = (E) es[index];
+  fastRemove(es, index);
+
+  return oldValue;
 }
 
-```
-
-基于ArrayList中已有的元素数量+1到minCapacity，与elementData数组大小进行比较，如果大于当前elementData数组，则把当前elementData赋予给一个新的数组对象，其中通过计算当前数组值*1.5+1得出新的数组的容量，调用Arrays.copeOf方法来生成新的数组对象；
-
-
-######删除对象：remove()
-源码：
-```
-public boolean remove(Object o) {
-    if (o == null) {
-        for (int index = 0; index < size; index++)
-            if (elementData[index] == null) {
-                fastRemove(index);
-                return true;
-            }
-    } else {
-        for (int index = 0; index < size; index++)
-            if (o.equals(elementData[index])) {
-                fastRemove(index);
-                return true;
-            }
-    }
-    return false;
-}
-
-/*
- * Private remove method that skips bounds checking and does not
- * return the value removed.
- */
-private void fastRemove(int index) {
-    modCount++;
-    int numMoved = size - index - 1;
-    if (numMoved > 0)
-        System.arraycopy(elementData, index+1, elementData, index,
-                         numMoved);
-    elementData[--size] = null; // clear to let GC do its work
+private void fastRemove(Object[] es, int i) {
+  modCount++;
+  final int newSize;
+  if ((newSize = size - 1) > i)
+    // 数组复制/移动
+    System.arraycopy(es, i + 1, es, i, newSize - i);
+  es[size = newSize] = null; // 将结尾的元素置为 null
 }
 ```
 
-首先判断传入对象是否为Null,如果为null,则遍历数组中已有值的元素，与传入对象进行比较是否为Null.如果为空则通过fastRemove删除相对应下标的对象，如果传入对象不为null,则通过equals方法进行比较，同样通过fastRemove方法删除；
+### 扩容
 
-fastRemove：如果需要移动，调用底层System.arraycopy方法将index后的对象往前复制以为，并将数组的最后一个元素值设置为null,即释放了对此对象的引用
+```java
 
-######判断是否包含此对象：contains
-源码：
-```
-public boolean contains(Object o) {
-    return indexOf(o) >= 0;
+private Object[] grow() {
+  return grow(size + 1);
 }
 
-public int indexOf(Object o) {
-    if (o == null) {
-        for (int i = 0; i < size; i++)
-            if (elementData[i]==null)
-                return i;
-    } else {
-        for (int i = 0; i < size; i++)
-            if (o.equals(elementData[i]))
-                return i;
-    }
-    return -1;
+private Object[] grow(int minCapacity) {
+  // 适用 Arrays.copyOf 进行复制，扩容
+  return elementData = Arrays.copyOf(elementData,
+                                     newCapacity(minCapacity));
+}
+
+private int newCapacity(int minCapacity) {
+  // overflow-conscious code
+  int oldCapacity = elementData.length;
+  // 扩容为原来的1.5倍
+  int newCapacity = oldCapacity + (oldCapacity >> 1);
+  if (newCapacity - minCapacity <= 0) {
+    if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA)
+      return Math.max(DEFAULT_CAPACITY, minCapacity);
+    if (minCapacity < 0) // overflow
+      throw new OutOfMemoryError();
+    return minCapacity;
+  }
+  return (newCapacity - MAX_ARRAY_SIZE <= 0)
+    ? newCapacity
+    : hugeCapacity(minCapacity);
+}
+
+private static int hugeCapacity(int minCapacity) {
+  if (minCapacity < 0) // overflow
+    throw new OutOfMemoryError();
+  // 虽然定义了最大的容量Integer.MAX_VALUE-8，但有以下情况可以让容量达到Integer.MAX_VALUE
+  return (minCapacity > MAX_ARRAY_SIZE)
+    ? Integer.MAX_VALUE
+    : MAX_ARRAY_SIZE;
 }
 ```
 
-判断是否存在该对象，需要遍历整个ArrayList的元素，如果传入对象为空，则直接判断已有元素是否为null，如果返回null，则返回true;如果传入对象不为null,则通过equals方法找寻是否有相等元素，有则返回true
+## 4. 静态内部类SubList
 
-另外还有一个lastIndexOf的方法，与indexOf区别在
-```
-public int lastIndexOf(Object o) {
-   if (o == null) {
-       for (int i = size-1; i >= 0; i--)
-           if (elementData[i]==null)
-               return i;
-   } else {
-       for (int i = size-1; i >= 0; i--)
-           if (o.equals(elementData[i]))
-               return i;
-   }
-   return -1;
+```java
+/** ArrayList 中的 subList 方法 */
+public List<E> subList(int fromIndex, int toIndex) {
+  // 调用父类AbstractList中的subListRangeCheck方法进行数组下标检查
+  subListRangeCheck(fromIndex, toIndex, size);
+  // 返回的内部类 SubList，不可后续进行强转
+  return new SubList<>(this, fromIndex, toIndex);
 }
 ```
+
+### 结构
+
+```java
+/**
+* 该类和 ArrayList 非继承关系
+*/
+private static class SubList<E> extends AbstractList<E> implements RandomAccess
+```
+
+### 属性
+
+```java
+private final ArrayList<E> root; // 父类，指当前的 ArrayList
+private final SubList<E> parent; 
+private final int offset;
+private int size;
+```
+
+### 构造
+
+```java
+/** SubList构造函数将原来的List和其部分属性赋值给了自己的相应属性，返回了父类的视图(View) */
+
+public SubList(ArrayList<E> root, int fromIndex, int toIndex) {
+  this.root = root;
+  this.parent = null;
+  this.offset = fromIndex;
+  this.size = toIndex - fromIndex;
+  this.modCount = root.modCount;
+}
+
+private SubList(SubList<E> parent, int fromIndex, int toIndex) {
+  this.root = parent.root;
+  this.parent = parent;
+  this.offset = parent.offset + fromIndex;
+  this.size = toIndex - fromIndex;
+  this.modCount = parent.modCount;
+}
+```
+
+### 操作
+
+```java
+/** 添加 */
+public void add(int index, E element) {
+  rangeCheckForAdd(index); // 下标检查
+  checkForComodification(); // fail-fast 检查
+  root.add(offset + index, element); // 调用的是 ArrayList 的 add 方法
+  updateSizeAndModCount(1);
+}
+```
+
+SubList单独定义了set、get、size、add、remove等操作方法，操作了ArrayList的同一个elementData数组，即对SubList进行修改时，也会影响到ArrayList的数据。
+
