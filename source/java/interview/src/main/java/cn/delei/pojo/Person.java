@@ -1,6 +1,8 @@
 package cn.delei.pojo;
 
 import java.io.Serializable;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * POJO 类
@@ -59,5 +61,29 @@ public class Person implements Serializable {
                 ", age=" + age +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int nameHash = name.toUpperCase().hashCode();
+        return nameHash ^ age;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (Objects.isNull(obj)) {
+            return false;
+        }
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj instanceof Person) {
+            final Person p = (Person) obj;
+            return this.getName().equals(p.getName())
+                    && this.getAge() == p.getAge();
+        }
+
+        return false;
     }
 }

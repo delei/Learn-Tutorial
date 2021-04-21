@@ -8,13 +8,56 @@ import java.util.LinkedList;
 
 /**
  * java.util.LinkedList
+ *
  * @author deleiguo
  */
 public class LinkedListDemo {
 
     public static LinkedList<Integer> dataList = new LinkedList<>();
+
     public static void main(String[] args) {
-        opera();
+//        add();
+        get();
+//        opera();
+    }
+
+
+    static void add() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("add");
+        final int size = 10;
+        dataList = new LinkedList<>();
+        // 头插
+        for (int i = 0; i < size; i++) {
+            dataList.addFirst(i);
+        }
+        // 尾插
+        for (int i = 0; i < size; i++) {
+            dataList.add(i + 10);
+        }
+        System.out.println(dataList);
+
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+    }
+
+    static void get() {
+        StopWatch stopWatch = new StopWatch();
+
+        final int size = 100000;
+        dataList = new LinkedList<>();
+        // 头插
+        for (int i = 0; i < size; i++) {
+            dataList.add(i);
+        }
+        stopWatch.start("index < (size>>1)");
+        System.out.println(dataList.get(size / 2 - 50));
+        stopWatch.stop();
+
+        stopWatch.start("index > (size>>1)");
+        System.out.println(dataList.get(size / 2 + 50));
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
     }
 
     /**

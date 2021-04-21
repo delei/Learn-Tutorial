@@ -173,16 +173,14 @@ public E getLast() {
 
 /** 查找相应位置的 Node 对象 */
 Node<E> node(int index) {
- 	// size >> 1 每次最坏情况下遍历链表中一半的元素
+ 	// size >> 1 每次最好的情况下只需遍历链表中一半的元素
   if (index < (size >> 1)) {
-    // 如果下标小于元素数量的一半
     Node<E> x = first;
     // 从first开始遍历
     for (int i = 0; i < index; i++)
       x = x.next;
     return x;
   } else {
-    // 如果小标不小于元素数量的一半
     Node<E> x = last;
     // 从last开始遍历
     for (int i = size - 1; i > index; i--)
