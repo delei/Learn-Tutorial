@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>delei-interview-java-concurrent</artifactId>
+    <packaging>jar</packaging>
+    <name>delei-interview-java-concurrent</name>
+    <description>Java 并发，JUC</description>
+
+    <parent>
+        <groupId>cn.delei.interview</groupId>
+        <artifactId>delei-interview-root</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+        </resources>
+    </build>
+
+    <dependencies>
+        <!--delei-->
+        <dependency>
+            <groupId>cn.delei.interview</groupId>
+            <artifactId>delei-interview-common</artifactId>
+            <version>${delei.interview.version}</version>
+        </dependency>
+    </dependencies>
+</project>
