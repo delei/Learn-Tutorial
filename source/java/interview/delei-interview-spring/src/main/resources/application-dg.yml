@@ -1,0 +1,13 @@
+# [DELEI]
+delei:
+  dg:
+    name: deleiguo
+    age: 28
+  config:
+    name: dg001
+    age: 22
+    city: Shanghai
+  model:
+    name: dg002
+    age: 24
+    city: Beijing
