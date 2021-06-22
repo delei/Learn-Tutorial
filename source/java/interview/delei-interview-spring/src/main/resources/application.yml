@@ -13,3 +13,9 @@ server:
 spring:
   application:
     name: interview
+
+# [DELEI]
+delei:
+  dg:
+    name: deleiguo
+    age: 28

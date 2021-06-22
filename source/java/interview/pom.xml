@@ -15,6 +15,7 @@
         <module>delei-interview-algorithm</module>
         <module>delei-interview-designpattern</module>
         <module>delei-interview-spring</module>
+        <module>delei-interview-spring-starter</module>
     </modules>
 
     <properties>

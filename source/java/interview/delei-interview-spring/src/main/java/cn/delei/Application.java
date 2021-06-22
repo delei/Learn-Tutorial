@@ -1,8 +1,8 @@
 package cn.delei;
 
+import cn.delei.spring.starter.EnableDeleiConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
 /**
  * Application 运行入口
@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author deleiguo
  */
 @SpringBootApplication
+@EnableDeleiConfiguration
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

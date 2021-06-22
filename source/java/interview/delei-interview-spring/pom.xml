@@ -57,10 +57,19 @@
             <artifactId>delei-interview-common</artifactId>
             <version>${delei.interview.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.delei.interview</groupId>
+            <artifactId>delei-interview-spring-starter</artifactId>
+            <version>${delei.interview.version}</version>
+        </dependency>
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
