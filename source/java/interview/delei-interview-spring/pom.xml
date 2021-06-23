@@ -80,5 +80,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- 便于可执行jar源码阅读 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-loader</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
