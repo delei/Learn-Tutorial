@@ -46,6 +46,7 @@ public class ThreadDemo {
         // threadCreate();
 //        threadStartHappenBefore();
         daemonThread();
+//        daemonThread01();
     }
 
     /**
@@ -130,7 +131,7 @@ public class ThreadDemo {
         System.out.println(futureTask.get());
     }
 
-    static void daemonThread() {
+    static void daemonThread01() {
         Thread daemonThread = new Thread(() -> {
             System.out.println("Daemon守护线程 Start!");
             try {
@@ -156,6 +157,28 @@ public class ThreadDemo {
         }
         System.out.println("Main Thread end!");
 
+    }
+
+    static void daemonThread() throws Exception {
+        Thread t1 = new Thread(() -> {
+            while (true) {
+                System.out.println("1-");
+            }
+        }, "T1-daemon");
+        t1.setDaemon(true);
+        t1.start();
+
+        Thread t2 = new Thread(() -> {
+            while (true) {
+                System.out.println("2-");
+            }
+        }, "T2-daemon");
+        t2.setDaemon(true);
+        t2.start();
+
+        // 主线程模拟运行
+        TimeUnit.SECONDS.sleep(3);
+        System.out.println("Main Thread end!");
     }
 
     static void printThreadInfo(Thread thread) {
