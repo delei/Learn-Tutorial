@@ -20,7 +20,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.1.18.RELEASE</version>
                 <configuration>
-                    <mainClass>cn.delei.Application</mainClass>
+                    <mainClass>cn.delei.spring.boot.BootApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

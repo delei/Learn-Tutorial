@@ -1,4 +1,4 @@
-package cn.delei.spring.autoconfigure;
+package cn.delei.spring.boot.autoconfigure;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
