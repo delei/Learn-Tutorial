@@ -1,4 +1,4 @@
-package cn.delei.spring.ioc.component;
+package cn.delei.spring.ioc.service;
 
 import cn.delei.spring.ioc.service.IocDemoService;
 import org.springframework.beans.factory.annotation.Autowired;

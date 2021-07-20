@@ -1,6 +1,6 @@
 package cn.delei.spring.ioc;
 
-import cn.delei.spring.ioc.component.IocDemoBean;
+import cn.delei.spring.ioc.service.IocDemoBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
