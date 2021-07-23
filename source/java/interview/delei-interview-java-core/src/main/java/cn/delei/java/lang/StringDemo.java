@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 
 /**
  * String
+ *
  * @author deleiguo
  */
 public class StringDemo {
@@ -33,6 +34,7 @@ public class StringDemo {
         String newB = new String("hello"); // newB为另一个引用,对象的内容一样
 
         System.out.println("a==b ? :" + (a == b));
+        System.out.println("a!=b ? :" + (a != b));
         System.out.println("newA==newB ? :" + (newA == newB));
         System.out.println("a==newA ? :" + (a == newA));
         // String.equals 是重写过的

@@ -16,6 +16,7 @@
         <module>delei-interview-designpattern</module>
         <module>delei-interview-spring</module>
         <module>delei-interview-spring-starter</module>
+        <module>delei-interview-software-architecture</module>
     </modules>
 
     <properties>
