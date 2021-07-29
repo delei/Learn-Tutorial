@@ -1,6 +1,5 @@
 package cn.delei.spring.ioc.service;
 
-import cn.delei.spring.ioc.service.IocDemoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,6 @@ public class IocDemoBean {
     @Qualifier("iocDemoServicePrintImpl")
     @Autowired
     private IocDemoService iocDemoService;
-
     @Resource
     private IocDemoService iocDemoServicePrintImpl;
     @Resource
