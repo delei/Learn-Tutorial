@@ -1,39 +1,46 @@
 package cn.delei.java.lang.proxy;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-
 /**
- * JDK 动态代理
+ * JDK 静态代理
  *
  * @author deleiguo
  */
-public class SubjectProxy implements InvocationHandler {
+public class SubjectProxy implements SubjectInterface {
     /**
      * 目标对象
      */
-    private Object targetObject;
+    private SubjectInterface targetObject;
 
-    public SubjectProxy(Object targetObject) {
+    public SubjectProxy(SubjectInterface targetObject) {
         this.targetObject = targetObject;
     }
 
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        // 功能增强01
-        before(method.getName());
-        // 调用 target 的 method 方法
-        Object result = method.invoke(targetObject, args);
-        // 功能增强02
-        after(method.getName());
-        return result;  // 返回方法的执行结果
-    }
-
     void before(String methodName) {
-        System.out.println("Proxy before:" + methodName);
+        System.out.println("==> Proxy before:" + methodName);
     }
 
     void after(String methodName) {
-        System.out.println("Proxy after:" + methodName);
+        System.out.println("==> Proxy after:" + methodName);
+    }
+
+    /**
+     * 代码增强
+     * @param param 参数
+     * @return String 结果
+     */
+    @Override
+    public String save(String param) {
+        before("save");
+        String result = targetObject.save(param);
+        after("save");
+        return result;
+    }
+
+    @Override
+    public String update(String param) {
+        before("update");
+        String result = targetObject.update(param);
+        after("update");
+        return result;
     }
 }

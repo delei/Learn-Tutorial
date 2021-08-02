@@ -13,6 +13,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class AopServiceAspect {
+    /**
+     * AOP Pointcut
+     */
+    private final static String POINTCUT_AOP = "execution(* cn.delei.spring.aop.service..*.*(..))";
 
     /**
      * 这句话是方法切入点
@@ -25,7 +29,7 @@ public class AopServiceAspect {
      * - 第三个*号 : 代表方法  *代表任意方法
      * - (..) : 代表方法的参数有无都可以
      */
-    @Pointcut("execution(* cn.delei.spring.aop.service..*.*(..))")
+    @Pointcut(POINTCUT_AOP)
     public void aopAspect() {
     }
 

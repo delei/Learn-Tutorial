@@ -4,7 +4,7 @@
     <artifactId>delei-interview-spring</artifactId>
     <packaging>jar</packaging>
     <name>delei-interview-spring</name>
-    <description>Spring</description>
+    <description>Spring Framework</description>
 
     <parent>
         <groupId>cn.delei.interview</groupId>
