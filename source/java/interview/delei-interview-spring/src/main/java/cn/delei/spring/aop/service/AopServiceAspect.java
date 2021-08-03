@@ -16,7 +16,7 @@ public class AopServiceAspect {
     /**
      * AOP Pointcut
      */
-    private final static String POINTCUT_AOP = "execution(* cn.delei.spring.aop.service..*.*(..))";
+    private final static String POINTCUT_AOP = "execution(* cn.delei.spring.aop.service..*.run(..))";
 
     /**
      * 这句话是方法切入点

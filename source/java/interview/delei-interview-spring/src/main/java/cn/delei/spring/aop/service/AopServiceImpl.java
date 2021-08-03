@@ -13,4 +13,8 @@ public class AopServiceImpl implements AopService {
     public void run() {
         System.out.println(this.getClass().getName() + ": run()");
     }
+    @Override
+    public void aopRun() {
+        System.out.println(this.getClass().getName() + ": aopRun()");
+    }
 }
