@@ -23,6 +23,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.jdk>11</project.build.jdk>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+
         <delei.interview.version>1.0.0</delei.interview.version>
 
         <util.hutools.version>5.3.10</util.hutools.version>
@@ -40,8 +43,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
