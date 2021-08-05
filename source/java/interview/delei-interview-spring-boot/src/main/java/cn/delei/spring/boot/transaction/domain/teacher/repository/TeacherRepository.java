@@ -16,23 +16,23 @@ public class TeacherRepository {
     private JdbcTemplate jdbcTemplate;
 
     public void add(TeacherEntity entity) {
-        String sql = "INSERT INTO user_student(vc_name) VALUES (?)";
+        String sql = "INSERT INTO user_teacher(vc_name) VALUES (?)";
         jdbcTemplate.update(sql, entity.getName());
     }
 
     public void update(TeacherEntity entity) {
-        String sql = "UPDATE user_student SET vc_name = ?";
+        String sql = "UPDATE user_teacher SET vc_name = ?";
         jdbcTemplate.update(sql, entity.getName());
     }
 
     public TeacherEntity selectByPrimaryKey(Long key) {
-        String sql = "SELECT l_id , vc_name FROM user_student WHERE l_id = ?";
+        String sql = "SELECT l_id , vc_name FROM user_teacher WHERE l_id = ?";
         TeacherEntity result = jdbcTemplate.queryForObject(sql, new Object[]{key}, new TeacherRowMapper());
         return result;
     }
 
     public void deleteByPrimaryKey(Long key) {
-        String sql = "DELETE FROM user_student WHERE l_id = ?";
+        String sql = "DELETE FROM user_teacher WHERE l_id = ?";
         jdbcTemplate.update(sql, key);
     }
 
