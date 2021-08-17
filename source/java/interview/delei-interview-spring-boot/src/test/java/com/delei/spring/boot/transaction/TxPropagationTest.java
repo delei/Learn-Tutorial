@@ -10,6 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+/**
+ * 事务传播单元测试(Junit5)
+ *
+ * @author deleiguo
+ */
 @SpringBootTest(classes = {BootApplication.class})
 public class TxPropagationTest {
 
@@ -20,6 +25,7 @@ public class TxPropagationTest {
 
     @BeforeEach
     public void beforeEach() {
+        // 清空表数据
         System.out.println("==> beforeEach sql");
         String sql = "truncate table user_student";
         jdbcTemplate.execute(sql);

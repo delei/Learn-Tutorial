@@ -1,0 +1,45 @@
+# [Server]
+server:
+  address: 127.0.0.1
+  port: 9999
+  servlet:
+    context-path: /interview
+    session:
+      timeout: -1
+  tomcat:
+    max-threads: 100
+    uri-encoding: UTF-8
+# [Spring]
+spring:
+  application:
+    name: interview
+  main:
+    banner-mode: console
+  datasource:
+    url: jdbc:mysql://server.deleiguo.com:3306/deleiguo_interview?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: deleiguo
+    driverClassName: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DatebookHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 10000
+      connection-test-query: SELECT 1
+
+mybatis:
+  mapper-locations: classpath*:mapper/mysql/*.xml
+  type-aliases-package: com.delei.spring.boot.mybatis.**.model
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  closeConn: true
+  params: count=countSql
