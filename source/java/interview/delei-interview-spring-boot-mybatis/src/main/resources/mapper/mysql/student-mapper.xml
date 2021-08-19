@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.delei.spring.boot.mybatis.dao.StudentMapper">
+
+    <resultMap type="cn.delei.spring.boot.mybatis.entity.StudentEntity" id="studentEntityMap">
+        <id property="id" column="l_id"/>
+        <result property="name" column="vc_name"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        stu.l_id,
+        stu.vc_name
+    </sql>
+
+    <!-- 查询 -->
+    <select id="selectByPk" resultMap="studentEntityMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from user_student stu
+        <where>
+            stu.l_id = #{id}
+        </where>
+    </select>
+
+    <select id="selectByName" resultMap="studentEntityMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from user_student stu
+        <where>
+            <if test="name != null">
+                stu.vc_name like '%#{name}'
+            </if>
+        </where>
+    </select>
+
+    <!-- 新增 -->
+    <insert id="insert" parameterType="cn.delei.spring.boot.mybatis.entity.StudentEntity"
+            useGeneratedKeys="true" keyProperty="deptId">
+        insert into user_student
+        (vc_name)
+        values
+        (
+        #{name}
+        )
+    </insert>
+
+    <!-- 根据ID修改 -->
+    <update id="update" parameterType="cn.delei.spring.boot.mybatis.entity.StudentEntity">
+        update user_student
+        <set>
+            <if test="name != null">
+                vc_name = #{name}
+            </if>
+        </set>
+        where l_id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteByPk" parameterType="java.lang.Long">
+        delete from
+        user_student
+        where l_id = #{id}
+    </delete>
+
+</mapper>
