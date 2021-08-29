@@ -1,0 +1,56 @@
+package cn.delei.spring.boot;
+
+import cn.delei.spring.boot.mybatis.dao.StudentMapper;
+import cn.delei.spring.boot.mybatis.entity.StudentEntity;
+import cn.delei.spring.boot.mybatis.service.MybatisCacheService;
+import cn.delei.util.PrintUtil;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+import java.util.List;
+
+/**
+ * Application 入口
+ *
+ * @author deleiguo
+ */
+@MapperScan("cn.delei.spring.boot.mybatis.**.dao")
+@SpringBootApplication
+public class MyBatisBootApplication {
+
+    /**
+     * Main方式启动方法
+     *
+     * @param args 参数
+     */
+    public static void main(String[] args) {
+        // Spring Boot 启动入口
+        ApplicationContext context = SpringApplication.run(MyBatisBootApplication.class, args);
+        //querySQLProcess(context);
+        //updateSQLProcess(context);
+        cache(context);
+    }
+
+    static void querySQLProcess(ApplicationContext context) {
+        StudentMapper studentMapper = context.getBean("studentMapper", StudentMapper.class);
+        List<StudentEntity> dataList = studentMapper.selectByName("USER");
+        dataList.forEach(s -> System.out.println(s.toString()));
+    }
+
+    static void updateSQLProcess(ApplicationContext context) {
+        StudentMapper studentMapper = context.getBean("studentMapper", StudentMapper.class);
+        StudentEntity studentEntity = new StudentEntity(1L, "DeleiGuo");
+        studentMapper.update(studentEntity);
+    }
+
+    static void cache(ApplicationContext context) {
+        MybatisCacheService mybatisCacheService = context.getBean("mybatisCacheService", MybatisCacheService.class);
+        final String param = "USER";
+        PrintUtil.printDivider("不同事务");
+        mybatisCacheService.selectByNameCacheDefault(param);
+        PrintUtil.printDivider("同一个事务");
+        mybatisCacheService.selectByNameCacheWithTransactional(param);
+    }
+}

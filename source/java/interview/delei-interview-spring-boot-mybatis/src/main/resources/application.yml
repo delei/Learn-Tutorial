@@ -37,9 +37,20 @@ mybatis:
     map-underscore-to-camel-case: true
     default-fetch-size: 100
     default-statement-timeout: 30
+    cache-enabled: true  # 开启二级缓存
+    local-cache-scope: session  # 一级缓存级别，默认为session，可修改为statement
 
-pagehelper:
-  helper-dialect: mysql
-  reasonable: true
-  closeConn: true
-  params: count=countSql
+#pagehelper:
+#  helper-dialect: mysql
+#  reasonable: true
+#  closeConn: true
+#  params: count=countSql
+
+logging:
+  level:
+    cn:
+      delei:
+        spring:
+          boot:
+            mybatis:
+              dao: debug

@@ -5,11 +5,13 @@
     <resultMap type="cn.delei.spring.boot.mybatis.entity.StudentEntity" id="studentEntityMap">
         <id property="id" column="l_id"/>
         <result property="name" column="vc_name"/>
+        <result property="sex" column="l_sex"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         stu.l_id,
-        stu.vc_name
+        stu.vc_name,
+        stu.l_sex
     </sql>
 
     <!-- 查询 -->
@@ -23,13 +25,15 @@
     </select>
 
     <select id="selectByName" resultMap="studentEntityMap" parameterType="java.lang.String">
-        select
+        SELECT
         <include refid="Base_Column_List"/>
-        from user_student stu
+        FROM user_student stu
         <where>
             <if test="name != null">
-                stu.vc_name like '%#{name}'
+                stu.vc_name LIKE concat('%',#{name},'%')
             </if>
+            <!-- OGNL表达式，获取常量类常量值 -->
+            AND stu.is_delete = ${@cn.delei.spring.boot.mybatis.BaseConstants@IS_DELETE}
         </where>
     </select>
 

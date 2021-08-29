@@ -20,7 +20,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.1.18.RELEASE</version>
                 <configuration>
-                    <mainClass>cn.delei.spring.boot.BootApplication</mainClass>
+                    <mainClass>cn.delei.spring.boot.MyBatisBootApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -88,10 +88,15 @@
         </dependency>
         <!-- mybatis & pagehelper -->
         <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.13</version>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.1</version>
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.pagehelper</groupId>-->
+        <!--            <artifactId>pagehelper-spring-boot-starter</artifactId>-->
+        <!--            <version>1.2.13</version>-->
+        <!--        </dependency>-->
         <!-- mysql -->
         <dependency>
             <groupId>mysql</groupId>
