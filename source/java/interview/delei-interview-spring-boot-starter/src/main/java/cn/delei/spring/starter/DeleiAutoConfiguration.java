@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * DeleiAutoConfiguration 自动装载
  * spring.factories文件
+ *
  * @author deleiguo
  */
 @Configuration
@@ -18,6 +19,7 @@ public class DeleiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public DeleiService deleiService() {
+        //throw new NoSuchBeanDefinitionException("DeleiService");
         return new DeleiServiceImpl();
     }
 }

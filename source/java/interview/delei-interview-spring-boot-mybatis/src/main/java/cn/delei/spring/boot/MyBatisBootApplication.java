@@ -3,6 +3,8 @@ package cn.delei.spring.boot;
 import cn.delei.spring.boot.mybatis.dao.StudentMapper;
 import cn.delei.spring.boot.mybatis.entity.StudentEntity;
 import cn.delei.spring.boot.mybatis.service.MybatisCacheService;
+import cn.delei.spring.starter.DeleiService;
+import cn.delei.spring.starter.EnableDeleiConfiguration;
 import cn.delei.util.PrintUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -10,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Application 入口
@@ -18,6 +21,7 @@ import java.util.List;
  */
 @MapperScan("cn.delei.spring.boot.mybatis.**.dao")
 @SpringBootApplication
+@EnableDeleiConfiguration
 public class MyBatisBootApplication {
 
     /**
@@ -28,6 +32,10 @@ public class MyBatisBootApplication {
     public static void main(String[] args) {
         // Spring Boot 启动入口
         ApplicationContext context = SpringApplication.run(MyBatisBootApplication.class, args);
+        Map<String, DeleiService> deleiServiceMap = context.getBeansOfType(DeleiService.class);
+        deleiServiceMap.entrySet().forEach(e -> {
+            e.getValue().loadDelei();
+        });
         //querySQLProcess(context);
         //updateSQLProcess(context);
         cache(context);
