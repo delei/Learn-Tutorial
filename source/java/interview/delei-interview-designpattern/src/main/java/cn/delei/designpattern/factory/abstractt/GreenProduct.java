@@ -5,7 +5,7 @@ package cn.delei.designpattern.factory.abstractt;
  *
  * @author deleiguo
  */
-public class GreenProduct implements ColorAbstract {
+public class GreenProduct implements ColorInterface {
     @Override
     public void draw() {
         System.out.println(GreenProduct.class.getName() + ":draw() ");

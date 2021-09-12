@@ -10,12 +10,12 @@ import cn.hutool.core.lang.Assert;
 public class ColorFactory extends ShapeAbstractFactory {
 
     @Override
-    public ShapeAbstract getShape(String shapeType) {
+    public ShapeInterface getShape(String shapeType) {
         return null;
     }
 
     @Override
-    public ColorAbstract getColor(String colorType) {
+    public ColorInterface getColor(String colorType) {
         Assert.notEmpty(colorType, "shapeType must not be null or empty");
         switch (colorType) {
             case ShapeAbstractFactory.COLOR_GREEN:

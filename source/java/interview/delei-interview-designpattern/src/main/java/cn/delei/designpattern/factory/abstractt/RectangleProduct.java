@@ -5,7 +5,7 @@ package cn.delei.designpattern.factory.abstractt;
  *
  * @author deleiguo
  */
-public class RectangleProduct implements ShapeAbstract {
+public class RectangleProduct implements ShapeInterface {
     @Override
     public void draw() {
         System.out.println(RectangleProduct.class.getName() + ":draw() ");

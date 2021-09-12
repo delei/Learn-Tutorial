@@ -10,7 +10,7 @@ import cn.hutool.core.lang.Assert;
 public class ShapeFactory extends ShapeAbstractFactory {
 
     @Override
-    public ShapeAbstract getShape(String shapeType) {
+    public ShapeInterface getShape(String shapeType) {
         Assert.notEmpty(shapeType, "shapeType must not be null or empty");
         switch (shapeType) {
             case ShapeAbstractFactory.SHAPE_CIRCLE:
@@ -24,7 +24,7 @@ public class ShapeFactory extends ShapeAbstractFactory {
     }
 
     @Override
-    public ColorAbstract getColor(String colorType) {
+    public ColorInterface getColor(String colorType) {
         return null;
     }
 }
