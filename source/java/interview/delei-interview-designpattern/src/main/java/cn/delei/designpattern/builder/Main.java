@@ -2,6 +2,11 @@ package cn.delei.designpattern.builder;
 
 import cn.delei.util.PrintUtil;
 
+/**
+ * 测试Main方法
+ *
+ * @author deleiguo
+ */
 public class Main {
 
     public static void main(String[] args) {
