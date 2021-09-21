@@ -19,6 +19,7 @@
         <module>delei-interview-spring-boot-starter</module>
         <module>delei-interview-spring-boot-mybatis</module>
         <module>delei-interview-software-architecture</module>
+        <module>delei-interview-distributed-system</module>
     </modules>
 
     <properties>

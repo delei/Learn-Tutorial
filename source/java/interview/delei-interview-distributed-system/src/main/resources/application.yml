@@ -1,0 +1,29 @@
+# [Server]
+server:
+  address: 127.0.0.1
+  port: 9999
+  servlet:
+    context-path: /interview
+    session:
+      timeout: -1
+  tomcat:
+    max-threads: 100
+    uri-encoding: UTF-8
+# [Spring]
+spring:
+  application:
+    name: interview
+  main:
+    banner-mode: console
+  redis:
+    database: 10
+    host: server.deleiguo.com
+    port: 6379
+    password: deleiguo
+    timeout: 10000
+    jedis:
+      pool:
+        max-active: 1000
+        max-wait: 5000
+        max-idle: 1000
+        min-idle: 10

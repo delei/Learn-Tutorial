@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>delei-interview-spring-boot-mybatis</artifactId>
+    <artifactId>delei-interview-distributed-system</artifactId>
     <packaging>jar</packaging>
-    <name>delei-interview-spring-boot-mybatis</name>
-    <description>Spring Boot Mybatis</description>
+    <name>delei-interview-distributed-system</name>
+    <description>分布式系统</description>
 
     <parent>
         <groupId>cn.delei.interview</groupId>
@@ -19,9 +19,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.1.18.RELEASE</version>
-                <configuration>
-                    <mainClass>cn.delei.spring.boot.MyBatisBootApplication</mainClass>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -57,11 +54,6 @@
             <artifactId>delei-interview-common</artifactId>
             <version>${delei.interview.version}</version>
         </dependency>
-        <dependency>
-            <groupId>cn.delei.interview</groupId>
-            <artifactId>delei-interview-spring-boot-starter</artifactId>
-            <version>${delei.interview.version}</version>
-        </dependency>
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -84,23 +76,28 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jdbc</artifactId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-        <!-- mybatis & pagehelper -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.mybatis.spring.boot</groupId>-->
-        <!--            <artifactId>mybatis-spring-boot-starter</artifactId>-->
-        <!--            <version>2.1.1</version>-->
-        <!--        </dependency>-->
         <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.13</version>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.1.0</version>
         </dependency>
-        <!-- mysql -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>3.13.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.redisson</groupId>
+                    <artifactId>redisson-spring-data-23</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-data-22</artifactId>
+            <version>3.13.6</version>
         </dependency>
         <!-- 便于可执行jar源码阅读 -->
         <dependency>
