@@ -46,7 +46,6 @@ public class RedissonApplication {
             new Thread(() -> {
                 // 获取锁实例
                 RLock rlock = redissonClient.getLock(lockKey);
-
                 String threadName = Thread.currentThread().getName();
                 System.out.printf("==> %s\t%s:\t ready\n", format.format(LocalTime.now()), threadName);
                 try {
