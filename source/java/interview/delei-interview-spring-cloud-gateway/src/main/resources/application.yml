@@ -1,0 +1,56 @@
+# [Server]
+server:
+  address: 127.0.0.1
+  port: 7100
+  servlet:
+    context-path: /interview-scg
+    session:
+      timeout: -1
+  tomcat:
+    max-threads: 100
+    uri-encoding: UTF-8
+# [Spring]
+spring:
+  application:
+    name: interview-scg
+  main:
+    banner-mode: console
+  cloud:
+    gateway:
+      metrics:
+        enabled: true
+      actuator:
+        verbose:
+          enabled: true
+      default-filters:
+        - AddResponseHeader=X-Response-Default-Foo, Default-Bar
+      routes:
+        - id: gateway-service-person
+          uri: http://127.0.0.1:8100
+          predicates:
+            - Path=/g/person/**
+            - Method=GET,POST
+          filters:
+            - StripPrefix=1
+        - id: gateway-service-teacher
+          uri: http://127.0.0.1:8101
+          predicates:
+            - Path=/g/teacher/**
+            - Method=GET,POST
+          filters:
+            - StripPrefix=1
+
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    gateway:
+      enabled: true
+    health:
+      show-details: always

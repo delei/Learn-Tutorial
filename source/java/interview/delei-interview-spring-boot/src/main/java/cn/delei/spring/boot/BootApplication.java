@@ -18,6 +18,7 @@ public class BootApplication {
 
     /**
      * Main方式启动方法
+     *
      * @param args
      */
     public static void main(String[] args) {

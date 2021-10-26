@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>delei-interview-spring-boot</artifactId>
+    <artifactId>delei-interview-spring-cloud-gateway</artifactId>
     <packaging>jar</packaging>
-    <name>delei-interview-spring-boot</name>
-    <description>Spring Boot</description>
+    <name>delei-interview-spring-cloud-gateway</name>
+    <description>Spring Cloud Gateway</description>
 
     <parent>
         <groupId>cn.delei.interview</groupId>
@@ -20,7 +20,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.1.18.RELEASE</version>
                 <configuration>
-                    <mainClass>cn.delei.spring.boot.GateWayApplication</mainClass>
+                    <mainClass>cn.delei.spring.boot.BootApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -57,48 +57,20 @@
             <artifactId>delei-interview-common</artifactId>
             <version>${delei.interview.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>cn.delei.interview</groupId>
-            <artifactId>delei-interview-spring-boot-starter</artifactId>
-            <version>${delei.interview.version}</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
-        <!-- Spring -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jdbc</artifactId>
-        </dependency>
-
-        <!-- mysql -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
         <!-- 便于可执行jar源码阅读 -->

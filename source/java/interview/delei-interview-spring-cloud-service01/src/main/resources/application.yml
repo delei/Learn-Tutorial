@@ -1,0 +1,22 @@
+# [Server]
+server:
+  address: 127.0.0.1
+  port: 8100
+# [Spring]
+spring:
+  application:
+    name: interview-service01
+  main:
+    banner-mode: console
+logging:
+  level:
+    root: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
