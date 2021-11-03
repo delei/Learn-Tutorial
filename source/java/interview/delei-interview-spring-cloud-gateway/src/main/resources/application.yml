@@ -15,6 +15,12 @@ spring:
     name: interview-scg
   main:
     banner-mode: console
+  redis:
+    database: 11
+    host: server.deleiguo.com
+    port: 6379
+    password: deleiguo
+    timeout: 10000
   cloud:
     gateway:
       metrics:
@@ -32,6 +38,7 @@ spring:
             - Method=GET,POST
           filters:
             - StripPrefix=1
+            - RequestTimeOne=true
         - id: gateway-service-teacher
           uri: http://127.0.0.1:8101
           predicates:
@@ -39,6 +46,17 @@ spring:
             - Method=GET,POST
           filters:
             - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                # 令牌桶每秒填充平均速率
+                redis-rate-limiter.replenishRate: 1
+                # 令牌桶的上限
+                redis-rate-limiter.burstCapacity: 10
+                # 每次请求消费的令牌数
+                redis-rate-limiter.requestedTokens: 1
+                # 使用 SpEL 表达式从 Spring 容器中获取 Bean 对象
+                # pathKeyResolver 是根据地址来限流
+                key-resolver: "#{@pathKeyResolver}"
 
 logging:
   level:
