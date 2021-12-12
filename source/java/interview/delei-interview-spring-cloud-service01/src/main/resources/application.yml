@@ -1,6 +1,6 @@
 # [Server]
 server:
-  address: 127.0.0.1
+  address: 0.0.0.0
   port: 8100
 # [Spring]
 spring:
@@ -8,6 +8,30 @@ spring:
     name: interview-service01
   main:
     banner-mode: console
+  cloud:
+    nacos:
+      discovery:
+        server-addr: server.deleiguo.com:8848
+        namespace: 1bf7f264-35d4-49e9-acbc-29a98ff840a4
+        group: DELEIGUO_GROUP
+feign:
+  # 开启压缩
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+  # 开启OpenFeign HttpClient
+  httpclient:
+    enabled: true
+  client:
+    config:
+      default:
+        # 连接超时时间
+        connectTimeout: 60000
+        # 读超时时间
+        readTimeout: 60000
+
 logging:
   level:
     root: debug

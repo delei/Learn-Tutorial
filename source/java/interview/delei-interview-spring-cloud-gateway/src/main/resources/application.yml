@@ -1,6 +1,6 @@
 # [Server]
 server:
-  address: 127.0.0.1
+  address: 0.0.0.0
   port: 7100
   servlet:
     context-path: /interview-scg
@@ -32,7 +32,7 @@ spring:
         - AddResponseHeader=X-Response-Default-Foo, Default-Bar
       routes:
         - id: gateway-service-person
-          uri: http://127.0.0.1:8100
+          uri: http://0.0.0.0:8100
           predicates:
             - Path=/g/person/**
             - Method=GET,POST
@@ -40,7 +40,7 @@ spring:
             - StripPrefix=1
             - RequestTimeOne=true
         - id: gateway-service-teacher
-          uri: http://127.0.0.1:8101
+          uri: http://0.0.0.0:8101
           predicates:
             - Path=/g/teacher/**
             - Method=GET,POST
@@ -57,7 +57,11 @@ spring:
                 # 使用 SpEL 表达式从 Spring 容器中获取 Bean 对象
                 # pathKeyResolver 是根据地址来限流
                 key-resolver: "#{@pathKeyResolver}"
-
+    nacos:
+      discovery:
+        server-addr: server.deleiguo.com:8848
+        namespace: 1bf7f264-35d4-49e9-acbc-29a98ff840a4
+        group: DELEIGUO_GROUP
 logging:
   level:
     org.springframework.cloud.gateway: debug

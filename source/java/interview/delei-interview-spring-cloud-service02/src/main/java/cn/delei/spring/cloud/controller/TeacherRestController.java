@@ -1,14 +1,14 @@
 package cn.delei.spring.cloud.controller;
 
+import cn.delei.core.R;
 import cn.delei.pojo.Teacher;
+import cn.delei.spring.cloud.service.TeacherService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,22 +20,21 @@ import java.util.List;
 @RequestMapping("/teacher")
 public class TeacherRestController {
 
+    @Resource
+    private TeacherService teacherService;
+
     @GetMapping("/")
-    public Mono<String> hello() {
-        return Mono.just("Hello TeacherRestController");
+    public R<String> hello() {
+        return R.ok("Hello TeacherRestController");
     }
 
     @GetMapping("/{id}")
-    public Mono<Teacher> findPersonById(@PathVariable int id) {
-        return Mono.justOrEmpty(new Teacher("Delei", 20));
+    public R<Teacher> selectSingle(@PathVariable int id) {
+        return R.ok(teacherService.selectSingle());
     }
 
     @GetMapping("/list")
-    public Flux<Teacher> dataList() throws InterruptedException {
-        List<Teacher> dataList = new ArrayList<>();
-        for (int i = 0; i < 200; i++) {
-            dataList.add(new Teacher("T" + i, i));
-        }
-        return Flux.fromIterable(dataList);
+    public R<List<Teacher>> dataList() throws InterruptedException {
+        return R.ok(teacherService.teacherList());
     }
 }
