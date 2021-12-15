@@ -37,7 +37,7 @@ public class SwapNumber {
      * @param i     下标i
      * @param j     下标j
      */
-    private static void swapByTemp(int[] array, int i, int j) {
+    public static void swapByTemp(int[] array, int i, int j) {
         int temp = array[i];
         array[i] = array[j];
         array[j] = temp;
@@ -50,7 +50,7 @@ public class SwapNumber {
      * @param i     下标i
      * @param j     下标j
      */
-    private static void swapByArithmetic(int[] array, int i, int j) {
+    public static void swapByArithmetic(int[] array, int i, int j) {
         array[i] = array[i] + array[j];
         array[j] = array[i] - array[j];
         array[i] = array[i] - array[j];
@@ -63,7 +63,7 @@ public class SwapNumber {
      * @param i     下标i
      * @param j     下标j
      */
-    private static void swapByBitOpera(int[] array, int i, int j) {
+    public static void swapByBitOpera(int[] array, int i, int j) {
         array[i] = array[i] ^ array[j];
         //array[i]^array[j]^array[j]=array[i]
         array[j] = array[i] ^ array[j];
