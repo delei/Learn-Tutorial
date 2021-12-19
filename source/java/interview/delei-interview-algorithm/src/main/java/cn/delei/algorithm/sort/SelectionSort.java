@@ -14,7 +14,7 @@ public class SelectionSort implements IArraySort {
     public int[] sort(int[] data) {
         int[] arr = Arrays.copyOf(data, data.length);
         // 总共要经过 N-1 轮比较
-        int min, temp;
+        int min;
         for (int i = 0; i < arr.length - 1; i++) {
             min = i;
             // 每轮需要比较的次数 N-i

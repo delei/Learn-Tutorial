@@ -1,5 +1,7 @@
 package cn.delei.algorithm.sort;
 
+import cn.delei.algorithm.SwapNumber;
+
 import java.util.Arrays;
 
 /**
@@ -18,9 +20,7 @@ public class BubbleSort implements IArraySort {
             flag = true;
             for (int j = 0; j < arr.length - i; j++) {
                 if (arr[j] > arr[j + 1]) {
-                    int tmp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = tmp;
+                    SwapNumber.swapByTemp(arr, j, j + 1);
                     flag = false;
                 }
             }
