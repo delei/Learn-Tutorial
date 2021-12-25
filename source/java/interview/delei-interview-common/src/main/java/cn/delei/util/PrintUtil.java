@@ -22,12 +22,12 @@ public class PrintUtil {
      * 打印子分割线
      */
     public static void printDivider() {
-        System.out.println("----------------------------------------------------------------");
+        System.out.println("\n----------------------------------------------------------------\n");
     }
 
     public static void printDivider(String title) {
         if (StrUtil.isNotBlank(title)) {
-            System.out.printf("+ ---- %-5s \n", title);
+            System.out.printf("|====> %-5s \n", title);
         } else {
             printDivider();
         }
