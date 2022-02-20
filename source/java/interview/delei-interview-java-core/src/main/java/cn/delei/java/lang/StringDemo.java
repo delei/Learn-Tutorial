@@ -12,10 +12,10 @@ import java.nio.charset.Charset;
  */
 public class StringDemo {
     public static void main(String[] args) {
-        stringObject();
-//        stringIntern();
+        //stringObject();
+        //stringIntern();
 //        stringSplice();
-//        stringNewMethod();
+        stringNewMethod();
 //        stringLength();
 //        stringAppend(100);
 //        stringAppend(10000);
@@ -82,7 +82,7 @@ public class StringDemo {
      */
     static void stringNewMethod() {
         PrintUtil.printDivider("Since JDK11 String method");
-        String str = " woshidage ";
+        String str = " woshidage\n222222\r333333";
         String newA = new String("");
         System.out.printf("首位空白:%s\n", str.strip());
         System.out.printf("去除尾部空白:%s\n", str.stripTrailing());

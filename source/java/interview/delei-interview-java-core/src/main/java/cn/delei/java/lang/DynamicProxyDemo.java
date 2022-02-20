@@ -15,11 +15,11 @@ import java.lang.reflect.Proxy;
  * @author deleiguo
  */
 public class DynamicProxyDemo {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         //JDKProxy();
         //JDKDynamicProxy();
         //CGLIBProxy();
-        JavassistFactoryProxy();
+        //JavassistFactoryProxy();
     }
 
     static void JDKProxy() {
@@ -90,7 +90,7 @@ public class DynamicProxyDemo {
             @Override
             public Object invoke(Object self, Method thisMethod, Method proceed, Object[] args) throws Throwable {
                 System.out.println("==> Proxy before: " + thisMethod.getName());
-                Object invoke = proceed.invoke(self,args);
+                Object invoke = proceed.invoke(self, args);
                 System.out.println("==> Proxy after: " + thisMethod.getName());
                 return invoke;
             }

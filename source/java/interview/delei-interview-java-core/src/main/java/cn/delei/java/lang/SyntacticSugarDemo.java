@@ -1,7 +1,11 @@
 package cn.delei.java.lang;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 语法糖
+ *
  * @author deleiguo
  */
 public class SyntacticSugarDemo {
@@ -46,5 +50,21 @@ public class SyntacticSugarDemo {
         int b = 1;
         assert a == b;
         assert a != b : "Hollis";
+    }
+
+    /**
+     * 可变参数
+     */
+    static void varargsParameter(String... params) {
+        System.out.println(params.length);
+    }
+
+    static void forEach() {
+        List<String> dataList = new ArrayList<>();
+        dataList.add("1");
+        dataList.add("1");
+        dataList.add("1");
+        dataList.add("1");
+        dataList.forEach(System.out::println);
     }
 }

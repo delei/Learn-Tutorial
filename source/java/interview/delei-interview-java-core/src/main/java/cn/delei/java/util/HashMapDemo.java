@@ -4,10 +4,12 @@ import cn.delei.util.HashCodeUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * java.util.HashMap Demo
+ *
  * @author deleiguo
  */
 public class HashMapDemo {
@@ -15,7 +17,8 @@ public class HashMapDemo {
     public static HashMap<String, String> hashMap;
 
     public static void main(String[] args) {
-        opera();
+        //opera();
+        calcInitCapacity();
     }
 
     /**
@@ -60,5 +63,35 @@ public class HashMapDemo {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * JDK7 安全问题，需使用特定的JDK
+     */
+    static void concurrentLoopIssue() {
+        HashMap<Integer, String> dataMap = new HashMap<>(2, 0.75f);
+        dataMap.put(5, "a");
+        new Thread("T01") {
+            @Override
+            public void run() {
+                dataMap.put(7, "B");
+                System.out.println(dataMap);
+            }
+        }.start();
+
+        new Thread("T02") {
+            @Override
+            public void run() {
+                dataMap.put(3, "C");
+                System.out.println(dataMap);
+            }
+        }.start();
+    }
+
+    static void calcInitCapacity() {
+        System.out.println(MapUtil.calcHashMapInitCapacity(7));
+        System.out.println(MapUtil.calcHashMapInitCapacity(10));
+        System.out.println(MapUtil.calcHashMapInitCapacity(16));
+        System.out.println(MapUtil.calcHashMapInitCapacity(25));
     }
 }
