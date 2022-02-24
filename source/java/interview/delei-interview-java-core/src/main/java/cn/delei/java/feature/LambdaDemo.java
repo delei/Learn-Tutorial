@@ -4,7 +4,6 @@ import cn.delei.util.PrintUtil;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * Lambda 函数编程 Demo
@@ -46,25 +45,7 @@ public class LambdaDemo {
         PrintUtil.printDivider("方法引用");
         // ==> 方法引用，由::双冒号操作符标识
         strList.forEach(System.out::println);
-
-        PrintUtil.printDivider("Predicate");
-        // ==> Predicate
-        Predicate<String> conditon = (str) -> str.length() > 4;
-        filter(strList, conditon);
-        conditon = (str) -> str.startsWith("delei");
-        filter(strList, conditon);
-        conditon = (str) -> true;
-        filter(strList, conditon);
-        conditon = (str) -> false;
-        filter(strList, conditon);
     }
-
-    static void filter(List<String> list, Predicate<String> predicate) {
-        list.stream().filter((s) -> (predicate.test(s))).forEach((s) -> {
-            System.out.println(s + " ");
-        });
-    }
-
 }
 
 
