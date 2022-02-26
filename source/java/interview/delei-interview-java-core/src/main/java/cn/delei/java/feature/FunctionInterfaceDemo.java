@@ -18,6 +18,7 @@ import java.util.function.Supplier;
 public class FunctionInterfaceDemo {
     public static void main(String[] args) {
         jdkFunction();
+        customDefined();
     }
 
     static void jdkFunction() {
@@ -65,6 +66,12 @@ public class FunctionInterfaceDemo {
         PrintUtil.printDivider("Supplier");
         Supplier<String> supplier = () -> "sss";
         System.out.println(supplier.get());
+    }
+
+    static void customDefined() {
+        PrintUtil.printDivider("FunctionalInterface");
+        LambdaFunctionalInterface<String> l1 = s -> s + "-1";
+        System.out.println(l1.func("aaa"));
     }
 
     static void filter(List<String> list, Predicate<String> predicate) {
