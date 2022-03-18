@@ -1,6 +1,7 @@
 package cn.delei.java.util;
 
 import cn.delei.util.HashCodeUtil;
+import cn.delei.util.PrintUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -17,8 +18,8 @@ public class HashMapDemo {
     public static HashMap<String, String> hashMap;
 
     public static void main(String[] args) {
-        //opera();
-        calcInitCapacity();
+        opera();
+        // calcInitCapacity();
     }
 
     /**
@@ -28,6 +29,7 @@ public class HashMapDemo {
         try {
             int capacity = 7;
             hashMap = new HashMap();
+            PrintUtil.printDivider("反射获取内部变量值");
             // 使用反射
             Class mapClass = hashMap.getClass();
             Field tableField = mapClass.getDeclaredField("table");
@@ -48,7 +50,9 @@ public class HashMapDemo {
                         , thresholdField.get(hashMap), hashMap.size());
             }
             // put 相同 hashcode 的 key
-            List<String> hashSting = HashCodeUtil.generateN(11);
+            PrintUtil.printDivider("put 相同 hashcode 的 key");
+            hashMap = new HashMap();
+            List<String> hashSting = HashCodeUtil.generateN(5);
             int h = hashSting.get(0).hashCode();
             int hash = h ^ (h >>> 16);
             System.out.println("Hashcode:" + hash);

@@ -1,12 +1,16 @@
 package cn.delei.java;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class JVMTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         //CMSTest();
-        G1Test();
+        //G1Test();
+        //stackOverFlow();
+        //outOfMemory();
     }
 
     static void CMSTest() {
@@ -17,6 +21,20 @@ public class JVMTest {
     static void G1Test() {
         // -Xms1M -Xmx10M -XX:+PrintGCDetails -XX:+UseG1GC -XX:MaxGCPauseMillis=200
         test();
+    }
+
+    static void outOfMemory() {
+        // -Xms1M -Xmx10M
+        List<JVMTest> data = new ArrayList<>();
+        //无限创建对象，在堆中
+        while (true) {
+            data.add(new JVMTest());
+        }
+    }
+
+    static void stackOverflow() {
+        // -Xms1M -Xmx10M -Xss1M
+        stackOverflow();
     }
 
     static void test() {
