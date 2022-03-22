@@ -28,5 +28,12 @@
             <artifactId>delei-interview-common</artifactId>
             <version>${delei.interview.version}</version>
         </dependency>
+
+        <!--查看java对象布局-->
+        <dependency>
+            <groupId>org.openjdk.jol</groupId>
+            <artifactId>jol-core</artifactId>
+            <version>0.16</version>
+        </dependency>
     </dependencies>
 </project>

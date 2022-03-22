@@ -7,6 +7,7 @@ import java.util.concurrent.*;
 
 class WorkThreadRunnable implements Runnable {
 
+    @Override
     public void run() {
         System.out.println("WorkThread run");
     }
@@ -42,31 +43,31 @@ public class ThreadDemo {
     }
 
     public static void main(String[] args) throws Exception {
-//        currentThread();
-        // threadCreate();
-//        threadStartHappenBefore();
-        daemonThread();
-//        daemonThread01();
+        //currentThread();
+        //threadCreate();
+        //threadStartHappenBefore();
+        //daemonThread();
+        //daemonThread01();
     }
 
     /**
      * 启动main实际currentThread启动了多少Thread
      */
     static void currentThread() {
-        PrintUtil.printDivider("输入所有线程状态");
+        PrintUtil.printDivider("所有线程状态");
         ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
         while (currentGroup.getParent() != null) {
             // 返回此线程组的父线程组
             currentGroup = currentGroup.getParent();
         }
-        //此线程组中活动线程的估计数
+        // 此线程组中活动线程的估计数
         int noThreads = currentGroup.activeCount();
         Thread[] lstThreads = new Thread[noThreads];
-        //把对此线程组中的所有活动子组的引用复制到指定数组中。
+        // 把对此线程组中的所有活动子组的引用复制到指定数组中。
         currentGroup.enumerate(lstThreads);
-        System.out.println("线程总数为" + noThreads);
+        System.out.println("线程总数: " + noThreads);
         for (Thread thread : lstThreads) {
-            System.out.printf("线程id:%s\t 线程名称:%s\t 优先级:%s\t 线程状态:%s\n", thread.getId(), thread.getName(),
+            System.out.printf("ID: %s\t 线程名称: %s\t 优先级: %s\t 线程状态: %s\n", thread.getId(), thread.getName(),
                     thread.getPriority(), thread.getState());
         }
     }
@@ -105,6 +106,11 @@ public class ThreadDemo {
         System.out.println(thread02.getName() + " " + thread02.getState());
     }
 
+    /**
+     * 创建线程的方式
+     *
+     * @throws Exception
+     */
     static void threadCreate() throws Exception {
         WorkThreadRunnable instance01 = new WorkThreadRunnable();
         Thread workThread01 = new Thread(instance01);
@@ -131,6 +137,9 @@ public class ThreadDemo {
         System.out.println(futureTask.get());
     }
 
+    /**
+     * 守护线程
+     */
     static void daemonThread01() {
         Thread daemonThread = new Thread(() -> {
             System.out.println("Daemon守护线程 Start!");

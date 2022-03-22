@@ -10,6 +10,13 @@ public class SynchronizedDemo {
     }
 
     /**
+     * 同步静态方法
+     */
+    public static synchronized void lockStaticMethod() {
+        System.out.println("Hello World");
+    }
+
+    /**
      * 同步代码块
      */
     public void lockCode() {
