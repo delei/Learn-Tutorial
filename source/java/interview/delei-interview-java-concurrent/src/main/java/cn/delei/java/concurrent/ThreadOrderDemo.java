@@ -3,6 +3,8 @@ package cn.delei.java.concurrent;
 import cn.delei.util.PrintUtil;
 
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.LockSupport;
 
@@ -25,9 +27,14 @@ public class ThreadOrderDemo {
          * 三个线程分别打印 A，B，C，要求这三个线程一起运行，打印 n 次，输出形如“ABCABCABC....”的字符串
          * 三个线程开始正常输出后，主线程若检测到用户任意的输入则停止三个打印线程的工作，整体退出
          */
-        question01S1();
+        //question01S1();
 //        question01S2();
 
+//        orderByMainJoin();
+//        orderByEachJoin();
+//        orderByCountDownLatch();
+//        orderByCyclicBarrier();
+//        orderBySemaphore();
     }
 
     /**
@@ -157,4 +164,218 @@ public class ThreadOrderDemo {
         } while (input == null);
         System.out.println("exit");
     }
+
+
+    /**
+     * 与Main thread 主线程join
+     * Thread.join()方法能够确保线程的执行顺序
+     *
+     * @throws Exception
+     */
+    static void orderByMainJoin() throws Exception {
+        PrintUtil.printDivider("Thread.join(): 与主线程");
+        threadA = new Thread(() -> {
+            System.out.println("thread-A");
+        }, "A");
+        threadB = new Thread(() -> {
+            System.out.println("thread-B");
+        }, "B");
+        threadC = new Thread(() -> {
+            System.out.println("thread-C");
+        }, "C");
+
+        // 让主线程等待子线程执行完成
+        threadA.start();
+        threadA.join();
+
+        threadB.start();
+        threadB.join();
+
+        threadC.start();
+        threadC.join();
+    }
+
+    /**
+     * 线程间按照期望顺序 join
+     * Thread.join()方法能够确保线程的执行顺序
+     *
+     * @throws Exception
+     */
+    static void orderByEachJoin() throws Exception {
+        PrintUtil.printDivider("Thread.join(): 线程之间 Join");
+        threadA = new Thread(() -> {
+            System.out.println("thread-A");
+        }, "A");
+        threadB = new Thread(() -> {
+            try {
+                threadA.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("thread-B");
+        }, "B");
+        threadC = new Thread(() -> {
+            try {
+                threadB.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("thread-C");
+        }, "C");
+
+        threadA.start();
+        threadB.start();
+        threadC.start();
+    }
+
+    /**
+     * Thread.wait()方法
+     *
+     * @throws Exception
+     */
+    static void orderByWait() throws Exception {
+        PrintUtil.printDivider("Thread.join(): 线程之间 Join");
+        threadA = new Thread(() -> {
+            System.out.println("thread-A");
+        }, "A");
+        threadB = new Thread(() -> {
+            try {
+                threadC.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("thread-B");
+        }, "B");
+        threadC = new Thread(() -> {
+            try {
+                threadB.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("thread-C");
+        }, "C");
+
+        threadA.start();
+        threadB.start();
+        threadC.start();
+    }
+
+    /**
+     * CountDownLatch
+     *
+     * @throws Exception
+     */
+    static void orderByCountDownLatch() throws Exception {
+        PrintUtil.printDivider("Thread.coin(): CountDownLatch");
+        CountDownLatch cdl01 = new CountDownLatch(1);
+        CountDownLatch cdl02 = new CountDownLatch(1);
+        threadA = new Thread(() -> {
+            System.out.println("thread-A");
+            cdl01.countDown();
+        }, "A");
+        threadB = new Thread(() -> {
+            try {
+                cdl01.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("thread-B");
+            cdl02.countDown();
+        }, "B");
+        threadC = new Thread(() -> {
+            try {
+                cdl02.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("thread-C");
+        }, "C");
+
+        threadA.start();
+        threadB.start();
+        threadC.start();
+    }
+
+    /**
+     * CyclicBarrier
+     *
+     * @throws Exception
+     */
+    static void orderByCyclicBarrier() throws Exception {
+        PrintUtil.printDivider("Thread.coin(): CyclicBarrier");
+        CyclicBarrier cb01 = new CyclicBarrier(2);
+        CyclicBarrier cb02 = new CyclicBarrier(2);
+        threadA = new Thread(() -> {
+            try {
+                cb01.await();
+                System.out.println("thread-A");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "A");
+        threadB = new Thread(() -> {
+            try {
+                cb01.await();
+                System.out.println("thread-B");
+                cb02.await();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "B");
+        threadC = new Thread(() -> {
+            try {
+                cb02.await();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println("thread-C");
+        }, "C");
+
+        threadA.start();
+        threadB.start();
+        threadC.start();
+    }
+
+    /**
+     * CyclicBarrier
+     *
+     * @throws Exception
+     */
+    static void orderBySemaphore() throws Exception {
+        PrintUtil.printDivider("Thread.coin(): Semaphore");
+        Semaphore semaphore01 = new Semaphore(1);
+        Semaphore semaphore02 = new Semaphore(1);
+        threadA = new Thread(() -> {
+            try {
+                System.out.println("thread-A");
+                semaphore01.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "A");
+        threadB = new Thread(() -> {
+            try {
+                semaphore01.acquire();
+                System.out.println("thread-B");
+                semaphore02.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "B");
+        threadC = new Thread(() -> {
+            try {
+                semaphore02.acquire();
+                threadB.join();
+                semaphore02.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println("thread-C");
+        }, "C");
+
+        threadA.start();
+        threadB.start();
+        threadC.start();
+    }
+
 }
