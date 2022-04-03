@@ -17,12 +17,15 @@ public class ThreadLocalDemo {
      * 类似“全局“
      */
     public static final ThreadLocal<Integer> THREAD_LOCAL = ThreadLocal.withInitial(() -> 0);
+    public static final InheritableThreadLocal<Integer> INHERITABLE_THREAD_LOCAL = new InheritableThreadLocal();
+
     private final static DateTimeFormatter format = DateTimeFormatter.ofPattern("hh:mm:ss");
 
     public static void main(String[] args) throws Exception {
-//        hashIncrement();
-        demo01();
-        //demo02();
+        hashIncrement();
+        // demo01();
+        // demo02();
+        // inheritableThreadLocalDemo();
     }
 
     /**
@@ -37,6 +40,7 @@ public class ThreadLocalDemo {
             System.out.print(i * HASH_INCREMENT & (max - 1));
             System.out.print(" ");
         }
+        System.out.println();
     }
 
     static void demo01() throws InterruptedException {
@@ -44,17 +48,25 @@ public class ThreadLocalDemo {
         System.out.println("Main Thread:" + THREAD_LOCAL.get());
         TimeUnit.SECONDS.sleep(2);
         new Thread(() -> {
-            System.out.println("T01 Thread get:" + THREAD_LOCAL.get());
-            THREAD_LOCAL.set(100);
-            System.out.println("T01 Thread after set:" + THREAD_LOCAL.get());
-            System.out.println("T01 Thread End!");
+            try {
+                System.out.println("T01 Thread get:" + THREAD_LOCAL.get());
+                THREAD_LOCAL.set(100);
+                System.out.println("T01 Thread after set:" + THREAD_LOCAL.get());
+                System.out.println("T01 Thread End!");
+            } finally {
+                THREAD_LOCAL.remove();
+            }
         }, "T01").start();
 
         new Thread(() -> {
-            System.out.println("T02 Thread get:" + THREAD_LOCAL.get());
-            THREAD_LOCAL.set(200);
-            System.out.println("T02 Thread after set:" + THREAD_LOCAL.get());
-            System.out.println("T02 Thread End!");
+            try {
+                System.out.println("T02 Thread get:" + THREAD_LOCAL.get());
+                THREAD_LOCAL.set(200);
+                System.out.println("T02 Thread after set:" + THREAD_LOCAL.get());
+                System.out.println("T02 Thread End!");
+            } finally {
+                THREAD_LOCAL.remove();
+            }
         }, "T02").start();
         TimeUnit.SECONDS.sleep(5);
         System.out.println("Main Thread get:" + THREAD_LOCAL.get());
@@ -87,6 +99,19 @@ public class ThreadLocalDemo {
         }
         poolExecutor.shutdown();
         System.out.println("==> Main End!");
+    }
+
+    static void inheritableThreadLocalDemo() {
+        THREAD_LOCAL.set(10);
+        INHERITABLE_THREAD_LOCAL.set(100);
+
+        System.out.println("Main Thread get:" + THREAD_LOCAL.get());
+        System.out.println("Main Thread get:" + INHERITABLE_THREAD_LOCAL.get());
+
+        new Thread(() -> {
+            System.out.println("T01 Thread get:" + THREAD_LOCAL.get());
+            System.out.println("T01 Inheritable Thread get:" + INHERITABLE_THREAD_LOCAL.get());
+        }, "T01").start();
     }
 
     static int get() {
