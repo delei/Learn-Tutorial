@@ -2,6 +2,7 @@ package cn.delei.java.concurrent;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -17,15 +18,19 @@ public class ThreadLocalDemo {
      * 类似“全局“
      */
     public static final ThreadLocal<Integer> THREAD_LOCAL = ThreadLocal.withInitial(() -> 0);
+    public static final ThreadLocal<byte[]> THREAD_BYTE_LOCAL = ThreadLocal.withInitial(() -> new byte[1]);
     public static final InheritableThreadLocal<Integer> INHERITABLE_THREAD_LOCAL = new InheritableThreadLocal();
 
     private final static DateTimeFormatter format = DateTimeFormatter.ofPattern("hh:mm:ss");
 
     public static void main(String[] args) throws Exception {
-        hashIncrement();
+        // hashIncrement();
         // demo01();
         // demo02();
         // inheritableThreadLocalDemo();
+
+        // VM options: -Xms5m -Xmx5m
+        threadLocalOOMDemo();
     }
 
     /**
@@ -112,6 +117,25 @@ public class ThreadLocalDemo {
             System.out.println("T01 Thread get:" + THREAD_LOCAL.get());
             System.out.println("T01 Inheritable Thread get:" + INHERITABLE_THREAD_LOCAL.get());
         }, "T01").start();
+    }
+
+    static void threadLocalOOMDemo() throws Exception {
+
+        ThreadPoolExecutor t = new ThreadPoolExecutor(4, 4, 0,
+                TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1000), new ThreadPoolExecutor.AbortPolicy());
+        for (int i = 0; i < 10; i++) {
+            Thread.sleep(100);
+            t.execute(new Thread(() -> {
+                ThreadLocal threadLocal = new ThreadLocal();
+                for (int j = 0; j < 5; j++) {
+                    threadLocal.set(new int[1024 * 1024]);
+                }
+                // 尝试分别取消如下的注释代码试一下
+                threadLocal = null;
+                // threadLocal.remove();
+            }));
+        }
+        t.shutdown();
     }
 
     static int get() {

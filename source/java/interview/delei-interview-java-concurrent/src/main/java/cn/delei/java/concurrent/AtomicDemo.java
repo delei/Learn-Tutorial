@@ -1,16 +1,13 @@
 package cn.delei.java.concurrent;
 
-import cn.delei.util.PrintUtil;
 import cn.delei.pojo.Person;
+import cn.delei.util.PrintUtil;
+import cn.hutool.core.date.StopWatch;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicIntegerArray;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.atomic.AtomicStampedReference;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
 /**
  * JUC 原子类
@@ -19,17 +16,14 @@ import java.util.concurrent.atomic.AtomicStampedReference;
  */
 public class AtomicDemo {
 
-    public static void main(String[] args) {
-        try {
-//            incrementAndGetDemo(100);
-//            atomicIntegerDemo();
-//            atomicIntegerArrayDemo();
-//            atomicReferenceDemo();
-            ABADemo();
-//            atomicStampedReferenceDemo();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args) throws Exception {
+        // incrementAndGetDemo(1000000);
+        // atomicIntegerDemo();
+        // atomicIntegerArrayDemo();
+        // atomicReferenceDemo();
+        // ABADemo();
+        // atomicStampedReferenceDemo();
+        performanceDemo(30, 10000000);
     }
 
     /**
@@ -41,12 +35,16 @@ public class AtomicDemo {
     static void incrementAndGetDemo(int threadSize) throws Exception {
         PrintUtil.printDivider("AtomicInteger 安全自增");
         ExecutorService executorService = Executors.newCachedThreadPool();
-        final AtomicInteger atomicInteger = new AtomicInteger(0);
+        final AtomicLong atomicLong = new AtomicLong(0);
+
+        final LongAdder longAdder = new LongAdder();
+
         // 设置 CountDownLatch 的计数器为 threadSize，保证在主线程打印累加结果之前，100 个线程已经执行完累加
         final CountDownLatch countDownLatch = new CountDownLatch(threadSize);
         for (int i = 0; i < threadSize; i++) {
             executorService.execute(() -> {
-                atomicInteger.incrementAndGet();
+                // atomicLong.incrementAndGet();
+                longAdder.increment();
                 // 每一个线程执行完后。计数器减1
                 countDownLatch.countDown();
             });
@@ -55,7 +53,7 @@ public class AtomicDemo {
         countDownLatch.await();
         executorService.shutdown();
         // 与普通的自增i++demo：ThreadUnsafeDemo中的autoIncrement方法进行对比
-        System.out.println(threadSize + "之后的结果 count = " + atomicInteger.get());
+        System.out.println(threadSize + "之后的结果 count = " + atomicLong.get() + "/" + longAdder.longValue());
     }
 
     /**
@@ -67,15 +65,25 @@ public class AtomicDemo {
         final AtomicInteger atimicI = new AtomicInteger(value);
         // 调用Unsafe类相关方法
         value = atimicI.getAndIncrement();
-        value = atimicI.getAndIncrement();
-        System.out.printf("getAndIncrement-->[value]:%s; [atimicI]:%s \n", value, atimicI);
+        System.out.printf("getAndIncrement-->[value]:%s; [atimicI]:%s \n", value, atimicI.get());
         value = atimicI.getAndDecrement();
-        System.out.printf("getAndDecrement-->[value]:%s; [atimicI]:%s \n", value, atimicI);
+        System.out.printf("getAndDecrement-->[value]:%s; [atimicI]:%s \n", value, atimicI.get());
         value = atimicI.getAndAdd(3);
         System.out.printf("getAndAdd-->[value]:%s; [atimicI]:%s \n", value, atimicI);
         value = atimicI.getAndSet(8);
-        System.out.printf("getAndSet-->[value]:%s; [atimicI]:%s \n", value, atimicI);
         System.out.printf("getAndSet-->[value]:%s; [atimicI]:%s \n", value, atimicI.get());
+
+        atimicI.set(20);
+        value = atimicI.incrementAndGet();
+        System.out.printf("incrementAndGet-->[value]:%s; [atimicI]:%s \n", value, atimicI.get());
+        value = atimicI.decrementAndGet();
+        System.out.printf("decrementAndGet-->[value]:%s; [atimicI]:%s \n", value, atimicI.get());
+        value = atimicI.addAndGet(3);
+        System.out.printf("addAndGet-->[value]:%s; [atimicI]:%s \n", value, atimicI.get());
+
+        atimicI.set(30);
+        System.out.printf("compareAndSet-->[value]:%s \n", atimicI.compareAndSet(10, 3));
+        System.out.printf("compareAndExchange-->[value]:%s \n", atimicI.compareAndExchange(5, 3));
     }
 
     /**
@@ -220,5 +228,54 @@ public class AtomicDemo {
 //            System.out.printf("%s\t进行compareAndSet\t flag=%s\t值=%s\t版本=%s\n", threadName,
 //                    flag, atomicStampedReference.getReference(), atomicStampedReference.getStamp());
         }, "Thread02").start();
+    }
+
+    static void performanceDemo(int threadSize, int times) throws Exception {
+        PrintUtil.printDivider("LongAdder VS AtomicLong 性能比较");
+        final ExecutorService executorService = Executors.newFixedThreadPool(threadSize);
+        List<Future> futureList = new ArrayList<>(threadSize);
+        final StopWatch stopWatch = new StopWatch();
+
+        stopWatch.start("LongAdder-->" + threadSize);
+        LongAdder longAdder = new LongAdder();
+        for (int i = 0; i < threadSize; i++) {
+            futureList.add(executorService.submit(() -> {
+                try {
+                    for (int j = 0; j < times; j++) {
+                        longAdder.increment();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }));
+        }
+        for (Future f : futureList) {
+            f.get();
+        }
+        System.out.println("LongAdder 结果 count = " + longAdder.sum());
+        stopWatch.stop();
+
+        stopWatch.start("AtomicLong-->" + threadSize);
+        AtomicLong atomicLong = new AtomicLong(0);
+        futureList = new ArrayList<>(threadSize);
+        for (int i = 0; i < threadSize; i++) {
+            futureList.add(executorService.submit(() -> {
+                try {
+                    for (int j = 0; j < times; j++) {
+                        atomicLong.incrementAndGet();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }));
+        }
+        for (Future f : futureList) {
+            f.get();
+        }
+        System.out.println("AtomicLong 结果 count = " + atomicLong.get());
+        stopWatch.stop();
+
+        executorService.shutdown();
+        System.out.println(stopWatch.prettyPrint());
     }
 }

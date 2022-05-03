@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>cn.delei.interview</groupId>
     <artifactId>delei-interview-root</artifactId>
@@ -13,6 +14,7 @@
         <module>delei-interview-java-core</module>
         <module>delei-interview-java-concurrent</module>
         <module>delei-interview-algorithm</module>
+        <module>delei-interview-benchmark</module>
         <module>delei-interview-designpattern</module>
         <module>delei-interview-spring</module>
         <module>delei-interview-spring-boot</module>
@@ -35,7 +37,7 @@
         <delei.interview.version>1.0.0</delei.interview.version>
 
         <util.hutools.version>5.3.18</util.hutools.version>
-        <util.fastjson.version>1.2.73</util.fastjson.version>
+        <util.fastjson.version>2.0.0</util.fastjson.version>
 
         <spring.version>5.2.12.RELEASE</spring.version>
         <spring.boot.version>2.2.13.RELEASE</spring.boot.version>
@@ -52,6 +54,9 @@
                 <configuration>
                     <skip>true</skip>
                     <encoding>UTF-8</encoding>
+                    <compilerVersion>11</compilerVersion>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -90,6 +95,7 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- junit test -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
