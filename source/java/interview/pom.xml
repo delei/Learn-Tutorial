@@ -36,8 +36,8 @@
 
         <delei.interview.version>1.0.0</delei.interview.version>
 
-        <util.hutools.version>5.3.18</util.hutools.version>
-        <util.fastjson.version>2.0.0</util.fastjson.version>
+        <util.hutools.version>5.7.18</util.hutools.version>
+        <util.fastjson.version>2.0.2</util.fastjson.version>
 
         <spring.version>5.2.12.RELEASE</spring.version>
         <spring.boot.version>2.2.13.RELEASE</spring.boot.version>
