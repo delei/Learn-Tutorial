@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>delei-interview-java-concurrent</artifactId>
+    <artifactId>delei-interview-google-guava</artifactId>
     <packaging>jar</packaging>
-    <name>delei-interview-java-concurrent</name>
-    <description>Java 并发，JUC</description>
+    <name>delei-interview-google-guava</name>
+    <description>Google Guava 工具库</description>
 
     <parent>
         <groupId>cn.delei.interview</groupId>
@@ -29,19 +29,18 @@
             <artifactId>delei-interview-common</artifactId>
             <version>${delei.interview.version}</version>
         </dependency>
-
-        <!--查看java对象布局-->
         <dependency>
-            <groupId>org.openjdk.jol</groupId>
-            <artifactId>jol-core</artifactId>
-            <version>0.16</version>
-            <!-- <version>0.14</version> -->
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.1-jre</version>
         </dependency>
-
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>transmittable-thread-local</artifactId>
-            <version>2.12.6</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
         </dependency>
     </dependencies>
 </project>

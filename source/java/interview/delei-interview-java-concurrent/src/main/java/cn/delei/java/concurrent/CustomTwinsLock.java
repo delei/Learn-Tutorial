@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Lock;
  * 在同一时刻允许至多两个线程的同时访问，表明同步资源数为 2
  * state:0,1,2
  * <p>
- * 设置初始状态 status 为 2，当一个线程进行获取，status 减 1，该 线程释放，则 status 加 1
+ * 设置初始状态 status 为 2，当一个线程进行获取，status 减 1，该线程释放，则 status 加 1
  *
  * @author deleiguo
  */
