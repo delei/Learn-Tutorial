@@ -1,7 +1,5 @@
 package cn.delei.distributed.limiter;
 
-import cn.delei.util.PrintUtil;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -9,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author deleiguo
  */
-public class FixedWindowsRateLimiter {
+public class FixedWindowsRateLimiter implements IRateLimiter {
     /**
      * 初始时间
      */
@@ -40,7 +38,8 @@ public class FixedWindowsRateLimiter {
         this.counter = ZERO;
     }
 
-    public boolean tryAcquire() {
+    @Override
+    public synchronized boolean tryAcquire() {
         long now = System.currentTimeMillis();
         int newCount = this.counter.addAndGet(1);
         // 判断是否在时间窗口内
@@ -57,34 +56,5 @@ public class FixedWindowsRateLimiter {
             return true;
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        int win = 3000;
-        int threshold = 20;
-        // 时间窗口为1000毫秒，阀值为20
-        FixedWindowsRateLimiter counterLimiter = new FixedWindowsRateLimiter(win, threshold);
-
-        int count = 0;
-        int size = 50;
-        PrintUtil.printTitle("01-模拟" + size + "次请求");
-        // 模拟请求，看多少能通过
-        for (int i = 0; i < size; i++) {
-            if (counterLimiter.tryAcquire()) {
-                count++;
-            }
-        }
-        System.out.printf("模拟 %s 次请求，通过 %s ,限流 %s \n", size, count, (size - count));
-
-        //模拟时间窗口
-        Thread.sleep(win + 200);
-
-        PrintUtil.printTitle("02-时间窗口过后，模拟" + size + "次请求");
-        count = 0;
-        for (int i = 0; i < size; i++) {
-            if (counterLimiter.tryAcquire()) {
-                count++;
-            }
-        }
-        System.out.printf("模拟 %s 次请求，通过 %s ,限流 %s \n", size, count, (size - count));
-    }
+    
 }

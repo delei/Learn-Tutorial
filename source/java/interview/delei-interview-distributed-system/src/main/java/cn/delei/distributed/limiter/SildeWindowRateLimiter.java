@@ -1,7 +1,5 @@
 package cn.delei.distributed.limiter;
 
-import cn.delei.util.PrintUtil;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -10,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author deleiguo
  */
-public class SildeWindowRateLimiter {
+public class SildeWindowRateLimiter implements IRateLimiter {
     /**
      * 窗口大小，单位为毫秒
      */
@@ -48,7 +46,8 @@ public class SildeWindowRateLimiter {
         startTime = System.currentTimeMillis();
     }
 
-    public boolean tryAcquire() {
+    @Override
+    public synchronized boolean tryAcquire() {
         long now = System.currentTimeMillis();
 
         // 计算滑动小窗口的数量
@@ -57,9 +56,12 @@ public class SildeWindowRateLimiter {
         slideWindow(windowsNum);
 
         int count = 0;
+        // 所有小窗口的计数总和
         for (int i = 0; i < splitNum; i++) {
             count += counters[i].get();
         }
+
+        // 如果计数总和超过阀值不可放行
         if (count >= limit) {
             return false;
         } else {
@@ -74,8 +76,9 @@ public class SildeWindowRateLimiter {
      * @param windowsNum
      */
     private void slideWindow(long windowsNum) {
-        if (windowsNum == 0)
+        if (windowsNum == 0) {
             return;
+        }
         long slideNum = Math.min(windowsNum, splitNum);
         for (int i = 0; i < slideNum; i++) {
             index = (index + 1) % splitNum;
@@ -83,42 +86,6 @@ public class SildeWindowRateLimiter {
         }
         // 更新滑动窗口时间
         startTime = startTime + windowsNum * (windowSize / splitNum);
-    }
-
-    public static void main(String[] args) throws Exception {
-        int limit = 20;
-        SildeWindowRateLimiter limiter = new SildeWindowRateLimiter(1000, limit, 10);
-
-        Thread.sleep(3000);
-
-        int count = 0;
-        int failCount = 0;
-        int size = 50;
-        int group = 100;
-
-        PrintUtil.printTitle("模拟100组,每次间隔150ms,50次请求");
-        for (int j = 0; j < group; j++) {
-            count = 0;
-            for (int i = 0; i < size; i++) {
-                if (limiter.tryAcquire()) {
-                    count++;
-                }
-            }
-            Thread.sleep(150);
-
-            // 模拟请求，看多少能通过
-            for (int i = 0; i < size; i++) {
-                if (limiter.tryAcquire()) {
-                    count++;
-                }
-            }
-            if (count > limit) {
-                System.out.println("时间窗口内放过的请求超过阈值，放过的请求数" + count + ",限流：" + limit);
-                failCount++;
-            }
-            Thread.sleep((int) (Math.random() * 100));
-        }
-        System.out.printf("模拟 %s 次请求，限流失败组数 %s \n", size, failCount);
     }
 
 }
