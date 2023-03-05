@@ -2,6 +2,8 @@ package cn.delei.java.lang;
 
 import cn.delei.util.PrintUtil;
 
+import java.util.Objects;
+
 /**
  * 自动拆装箱
  *
@@ -29,6 +31,7 @@ public class AutoBoxDemo {
         System.out.printf("%s == %s:%s \n", i1, i2, i1 == i2);
         System.out.printf("%s == %s:%s \n", i3, i4, i3 == i4);
         System.out.printf("%s == %s:%s \n", i3, i6, i3 == i6);
+        System.out.printf("%s == %s:%s \n", i3, i6, Objects.equals(i3, i6));
 
         // intValue 拆箱
         System.out.printf("i3.intValue() == i6:%s \n", i3.intValue() == i6);

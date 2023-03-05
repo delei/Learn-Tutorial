@@ -10,7 +10,7 @@
     <parent>
         <groupId>cn.delei.interview</groupId>
         <artifactId>delei-interview-root</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <build>

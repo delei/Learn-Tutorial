@@ -10,7 +10,7 @@
     <parent>
         <groupId>cn.delei.interview</groupId>
         <artifactId>delei-interview-root</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <build>
@@ -64,7 +64,7 @@
         <dependency>
             <groupId>cn.delei.interview</groupId>
             <artifactId>delei-interview-common</artifactId>
-            <version>${delei.interview.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!--查看java对象布局-->
