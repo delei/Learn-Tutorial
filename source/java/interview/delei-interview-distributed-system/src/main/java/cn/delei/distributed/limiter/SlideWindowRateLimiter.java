@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author deleiguo
  */
-public class SildeWindowRateLimiter implements IRateLimiter {
+public class SlideWindowRateLimiter implements IRateLimiter {
     /**
      * 窗口大小，单位为毫秒
      */
@@ -34,10 +34,10 @@ public class SildeWindowRateLimiter implements IRateLimiter {
      */
     private long startTime;
 
-    private SildeWindowRateLimiter() {
+    private SlideWindowRateLimiter() {
     }
 
-    public SildeWindowRateLimiter(int windowSize, int limit, int splitNum) {
+    public SlideWindowRateLimiter(int windowSize, int limit, int splitNum) {
         this.limit = limit;
         this.windowSize = windowSize;
         this.splitNum = splitNum;

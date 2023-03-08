@@ -41,14 +41,11 @@ public class FixedWindowsRateLimiter implements IRateLimiter {
     @Override
     public synchronized boolean tryAcquire() {
         long now = System.currentTimeMillis();
-        int newCount = this.counter.addAndGet(1);
         // 判断是否在时间窗口内
         if ((now - this.startTime) < this.windowSize) {
+            int newCount = this.counter.addAndGet(1);
             // 判断是否超过限流阀值
-            if (newCount <= this.threshold) {
-                return true;
-            }
-            return false;
+            return newCount <= this.threshold;
         } else {
             // 超过时间窗口，重置
             this.startTime = now;
@@ -56,5 +53,4 @@ public class FixedWindowsRateLimiter implements IRateLimiter {
             return true;
         }
     }
-    
 }

@@ -1,6 +1,10 @@
-package cn.delei.distributed.limiter;
+package cn.delei.distributed;
 
+import cn.delei.distributed.limiter.FixedWindowsRateLimiter;
+import cn.delei.distributed.limiter.LeakyBucketRateLimiter;
+import cn.delei.distributed.limiter.SlideWindowRateLimiter;
 import cn.delei.util.PrintUtil;
+import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -9,21 +13,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class RateLimiteTest {
-
-    public static void main(String[] args) throws Exception {
-        // fixedTest();
-        // slideTest();
-        leakyBucketTest();
-    }
+/**
+ * 限流测试
+ *
+ * @author deleiguo
+ */
+public class RateLimiterTest {
 
     /**
      * 固定窗口限流
      */
-    static void fixedTest() throws Exception {
-        int win = 3000;
+    @Test
+    public void fixedWindowsRateLimiterTest() {
+        int win = 1000;
         int threshold = 20;
-        // 时间窗口为1000毫秒，阀值为20
+
         FixedWindowsRateLimiter counterLimiter = new FixedWindowsRateLimiter(win, threshold);
 
         // 统计通过数量
@@ -40,7 +44,11 @@ public class RateLimiteTest {
         System.out.printf("模拟 %s 次请求，通过 %s ,限流 %s \n", size, count, (size - count));
 
         //模拟时间窗口
-        Thread.sleep(win + 200);
+        try {
+            Thread.sleep(win + 200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         PrintUtil.printTitle("02-时间窗口过后，模拟" + size + "次请求");
         count = 0;
@@ -55,9 +63,10 @@ public class RateLimiteTest {
     /**
      * 滑动窗口限流
      */
-    static void slideTest() throws Exception {
+    @Test
+    public void slideWindowRateLimiterTest() throws Exception {
         int limit = 20;
-        SildeWindowRateLimiter limiter = new SildeWindowRateLimiter(1000, limit, 10);
+        SlideWindowRateLimiter limiter = new SlideWindowRateLimiter(1000, limit, 10);
 
         Thread.sleep(3000);
 
@@ -91,8 +100,8 @@ public class RateLimiteTest {
         System.out.printf("模拟 %s 次请求，限流失败组数 %s \n", size, failCount);
     }
 
-
-    private static void leakyBucketTest() throws Exception {
+    @Test
+    public void leakyBucketTest() {
         LeakyBucketRateLimiter rateLimiter = new LeakyBucketRateLimiter(20, 20);
 
         ExecutorService singleThread = Executors.newSingleThreadExecutor();
@@ -132,5 +141,4 @@ public class RateLimiteTest {
         //     Thread.sleep(10000);
         // }
     }
-
 }

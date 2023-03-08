@@ -11,5 +11,5 @@ public interface IRateLimiter {
      *
      * @return true 表示当前流量可以放行，否则表示拒绝
      */
-    public boolean tryAcquire();
+    boolean tryAcquire();
 }
