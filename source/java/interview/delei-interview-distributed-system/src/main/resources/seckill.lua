@@ -14,6 +14,6 @@ elseif (_amount>current_stock) then
 return 0
 else
 -- 减库存
-redis.call("DECRBY",_key,1)
+redis.call("DECRBY",_key,_amount)
 return 1
 end
