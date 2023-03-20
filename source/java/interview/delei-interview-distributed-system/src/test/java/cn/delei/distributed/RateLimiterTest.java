@@ -4,7 +4,7 @@ import cn.delei.distributed.limiter.FixedWindowsRateLimiter;
 import cn.delei.distributed.limiter.LeakyBucketRateLimiter;
 import cn.delei.distributed.limiter.SlideWindowRateLimiter;
 import cn.delei.util.PrintUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 import java.util.Queue;

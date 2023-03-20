@@ -15,6 +15,7 @@
         <module>delei-interview-algorithm</module>
         <module>delei-interview-benchmark</module>
         <module>delei-interview-designpattern</module>
+        <module>delei-interview-redis</module>
         <module>delei-interview-google-guava</module>
         <module>delei-interview-spring</module>
         <module>delei-interview-spring-boot</module>
@@ -123,18 +124,6 @@
 
     <dependencies>
         <!-- junit test -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>4.7.0</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
