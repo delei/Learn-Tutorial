@@ -43,7 +43,7 @@ public class JedisUtil {
     }
 
     /**
-     * 单次尝试获取分布式锁(SET EX PX NX)
+     * 单次尝试获取分布式锁(SET NX PX)
      *
      * @param jedis      Redis客户端
      * @param lockKey    锁

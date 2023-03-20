@@ -1,0 +1,103 @@
+version: '3'
+
+services:
+  master:
+    image: redis:6.2.11-alpine
+    container_name: dg-redis-master
+    restart: always
+    privileged: true
+    command: redis-server --requirepass deleiguo --masterauth deleiguo --appendonly yes
+    volumes:
+      - ./data/master:/data
+    ports:
+      - 6379:6379
+    networks:
+      redis_net:
+        ipv4_address: 172.16.0.10 
+  slave1:
+    image: redis:6.2.11-alpine
+    container_name: dg-redis-slave1
+    restart: always
+    privileged: true
+    command: redis-server --slaveof dg-redis-master 6379  --requirepass deleiguo --masterauth deleiguo  --appendonly yes
+    volumes:
+      - ./data/slave1:/data
+    ports:
+      - 6380:6379
+    depends_on:
+      - master
+    networks:
+      redis_net:
+        ipv4_address: 172.16.0.11
+  slave2:
+    image: redis:6.2.11-alpine
+    container_name: dg-redis-slave2
+    restart: always
+    privileged: true
+    command: redis-server --slaveof dg-redis-master 6379  --requirepass deleiguo --masterauth deleiguo  --appendonly yes
+    volumes:
+      - ./data/slave2:/data
+    ports:
+      - 6381:6379
+    depends_on:
+      - master
+    networks:
+      redis_net:
+        ipv4_address: 172.16.0.12
+  sentinel1:
+    image: redis:6.2.11-alpine
+    container_name: dg-redis-sentinel1
+    restart: always
+    privileged: true
+    command: redis-sentinel /home/redis/sentinel.conf
+    volumes:
+      - ./conf/sentinel1.conf:/home/redis/sentinel.conf
+    ports:
+      - 26379:26379
+    depends_on:
+      - master
+      - slave1
+      - slave2
+    networks:
+      redis_net:
+        ipv4_address: 172.16.0.20
+  sentinel2:
+    image: redis:6.2.11-alpine
+    container_name: dg-redis-sentinel2
+    restart: always
+    privileged: true
+    command: redis-sentinel /home/redis/sentinel.conf
+    volumes:
+      - ./conf/sentinel2.conf:/home/redis/sentinel.conf
+    ports:
+      - 26380:26379
+    depends_on:
+      - master
+      - slave1
+      - slave2
+    networks:
+      redis_net:
+        ipv4_address: 172.16.0.21
+  sentinel3:
+    image: redis:6.2.11-alpine
+    container_name: dg-redis-sentinel3
+    restart: always
+    privileged: true
+    command: redis-sentinel /home/redis/sentinel.conf
+    volumes:
+      - ./conf/sentinel3.conf:/home/redis/sentinel.conf
+    ports:
+      - 26381:26379
+    depends_on:
+      - master
+      - slave1
+      - slave2
+    networks:
+      redis_net:
+        ipv4_address: 172.16.0.22
+
+networks:
+  redis_net:
+    ipam:
+      config:
+      - subnet: 172.16.0.0/24

@@ -50,7 +50,7 @@ public class SeckillApplication {
 
         // 构造用户
         List<String> users = new ArrayList<>();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 10000; i++) {
             users.add("UT-" + i);
         }
 

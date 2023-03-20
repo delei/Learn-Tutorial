@@ -1,0 +1,15 @@
+# Redis
+
+```shell
+
+# mkdir
+mkdir -p ./data/{master,slave1,slave2}
+
+# master-slave
+docker-compose -f docker-compose-master-slave.yml up -d
+
+# master-slave & sentinel
+docker-compose -f docker-compose-sentinel.yml up -d
+
+```
+
