@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:6.2.11-alpine
+    container_name: dg-redis-standalone
+    restart: always
+    privileged: true
+    command: redis-server --requirepass deleiguo --appendonly yes
+    volumes:
+      - ./data/standalone:/data
+    ports:
+      - 6379:6379

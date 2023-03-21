@@ -42,19 +42,30 @@ public class JedisTest {
             jedis.get(testKey);
             jedis.expire(testKey, 10);
             jedis.del(testKey);
+            jedis.type(testKey);
 
             // String
             jedis.append(testKey, testValue);
             jedis.setnx(testKey, testValue);
 
             // List
+            jedis.flushDB();
             jedis.lpush(testKey, "a", "b", "c");
+            jedis.rpush(testKey, "11", "22", "33");
 
             // Map
+            jedis.flushDB();
             Map<String, String> map = new HashMap<>();
-            map.put("name", testValue);
-            map.put("age", "20");
+            map.put("aaaa", "111");
+            map.put("bbbb", "222");
+            map.put("cccc", "333");
             jedis.hmset(testKey, map);
+            System.out.println(jedis.hkeys(testKey));
+            System.out.println(jedis.hlen(testKey));
+
+            // keys
+            jedis.keys("de*");
+
 
         }
     }
@@ -63,8 +74,8 @@ public class JedisTest {
     public void lockTest() {
         String lockKey = "lock_order";
         String lockValue = 100 + "";
-        long lockTime = 60000L;
-        int retry = 5;
+        long lockTime = 5L;
+        int retry = 3;
 
         // 构造用户
         List<String> users = new ArrayList<>();
@@ -79,12 +90,13 @@ public class JedisTest {
                 int count = 0;
                 do {
                     count++;
-                    flag = jedisLock.tryLock(lockKey, lockValue, TimeUnit.MILLISECONDS, lockTime);
+                    flag = jedisLock.tryLock(lockKey, lockValue, TimeUnit.SECONDS, lockTime);
                     if (flag) {
-                        log.info(StrUtil.format("==> {}\t 结果:{}"), u, true);
+                        log.info(StrUtil.format("==>{}\t {}\t 得到了 lock"),
+                                Thread.currentThread().getId(), u);
                         // 模拟业务逻辑处理时间
                         try {
-                            TimeUnit.SECONDS.sleep(10L);
+                            TimeUnit.SECONDS.sleep(lockTime - 1L);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
