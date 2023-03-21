@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  portainer:
+    image: mysql:5.7
+    container_name: delei-mysql-5.7
+    restart: always
+    privileged: true
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./my.cnf:/etc/my.cnf
+    environment:
+      - "MYSQL_ROOT_PASSWORD=deleiguo"
+      - "TZ=Asia/Shanghai"
+    network_mode: "bridge"
+    ports:
+      - "3306:3306"

@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  portainer:
+    image: nacos/nacos-server
+    container_name: delei-nacos-server
+    restart: always
+    privileged: true
+    environment:
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=mysql
+    volumes:
+      - ./volumes/logs:/home/nacos/logs
+      - ./application.properties:/home/nacos/conf/application.properties
+    network_mode: "bridge"
+    ports:
+      - "8848:8848"
