@@ -46,10 +46,9 @@ public class JedisLock implements IDistributedLocker {
     public boolean tryLock(String lockKey, String lockValue, TimeUnit unit, long leaseTime) {
         Assert.notBlank(lockKey);
         Jedis jedis = getJedis();
-        long time = unit.toMillis(leaseTime);
         SetParams setParams = new SetParams();
         setParams.nx();
-        setParams.px(time);
+        setParams.px(unit.toMillis(leaseTime));
         try (jedis) {
             return LOCK_SUCCESS.equals(jedis.set(prefix() + lockKey, lockValue, setParams));
         }
@@ -73,10 +72,9 @@ public class JedisLock implements IDistributedLocker {
         Assert.isTrue(amount > 0);
         Jedis jedis = getJedis();
         try (jedis) {
-            long time = unit.toMillis(leaseTime);
             jedis.del(prefix() + SECKILL_KEY);
             String result = jedis.set(prefix() + SECKILL_KEY, String.valueOf(amount),
-                    SetParams.setParams().nx().px(time));
+                    SetParams.setParams().nx().px(unit.toMillis(leaseTime)));
             return "OK".equals(result);
         }
     }

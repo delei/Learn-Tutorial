@@ -28,14 +28,14 @@ public class SeckillTest {
 
     @Test
     public void jedisTest() throws Exception {
-        long leaseTime = 600L;
+        long leaseTime = 60L;
         seckill(jedisLock, TimeUnit.SECONDS, leaseTime, 20, 10, true);
         seckill(jedisLock, TimeUnit.SECONDS, leaseTime, 6, 8, false);
     }
 
     @Test
     public void redissonTest() throws Exception {
-        long leaseTime = 600L;
+        long leaseTime = 60L;
         seckill(redissonLock, TimeUnit.SECONDS, leaseTime, 20, 10, true);
         seckill(redissonLock, TimeUnit.SECONDS, leaseTime, 6, 8, false);
     }
@@ -44,40 +44,46 @@ public class SeckillTest {
      * 通用模拟方法
      *
      * @param lock      lock具体实现
-     * @param unit      单位
+     * @param timeUnit  key持续时间单位
      * @param leaseTime key持续时间
      * @param stock     库存总量
      * @param users     模拟用户量
-     * @param isRandom  是否随机每用户下单的数量
-     * @throws Exception InterruptedException
+     * @param isRandom  是否随机每个用户下单的数量
      */
-    private void seckill(IDistributedLocker lock, TimeUnit unit, long leaseTime, int stock,
-                         int users, boolean isRandom) throws Exception {
+    void seckill(IDistributedLocker lock, TimeUnit timeUnit, long leaseTime,
+                 int stock, int users, boolean isRandom) throws InterruptedException {
+        Assert.isTrue(stock > 0);
+        Assert.isTrue(users > 0);
+        if (isRandom) {
+            Assert.isTrue(stock > 2);
+        }
+
         PrintUtil.printTitle(StrUtil.format("stock:{}  users:{}", stock, users));
         // 设置库存
-        lock.setStock(stock, unit, leaseTime);
+        lock.setStock(stock, timeUnit, leaseTime);
 
         // 控制同时开始
-        CountDownLatch start = new CountDownLatch(1);
+        CountDownLatch startLatch = new CountDownLatch(1);
         // 控制所有线程运行结束
-        CountDownLatch end = new CountDownLatch(users);
-        int amount;
+        CountDownLatch endLatch = new CountDownLatch(users);
+
         for (int i = 1; i <= users; i++) {
-            amount = isRandom ? RandomUtil.randomInt(1, stock / 2) : 1;
-            new Thread(new SeckillTaskRunnable(start, end,
-                    lock, "UT-" + i, amount)).start();
+            new Thread(new SeckillTaskRunnable(startLatch, endLatch, lock, "UT-" + i,
+                    isRandom ? RandomUtil.randomInt(1, stock / 2) : 1)
+            ).start();
         }
-        start.countDown();
-        end.await();
+        startLatch.countDown();
+        // 等待所有线程运行结束
+        endLatch.await();
         TimeUnit.SECONDS.sleep(1L);
     }
-    
+
     /**
      * 任务 Runnable
      */
     static class SeckillTaskRunnable implements Runnable {
-        private CountDownLatch start;
-        private CountDownLatch end;
+        private CountDownLatch startLatch;
+        private CountDownLatch endLatch;
         /**
          * 锁
          */
@@ -91,14 +97,18 @@ public class SeckillTest {
          */
         private int amount;
 
-        public SeckillTaskRunnable(CountDownLatch start, CountDownLatch end,
+        private SeckillTaskRunnable() {
+        }
+
+        public SeckillTaskRunnable(CountDownLatch startLatch, CountDownLatch endLatch,
                                    IDistributedLocker lock, String user, int amount) {
-            Assert.notNull(start);
+            Assert.notNull(startLatch);
+            Assert.notNull(endLatch);
             Assert.notNull(lock);
             Assert.notBlank(user);
             Assert.isTrue(amount > 0);
-            this.start = start;
-            this.end = end;
+            this.startLatch = startLatch;
+            this.endLatch = endLatch;
             this.lock = lock;
             this.user = user;
             this.amount = amount;
@@ -108,13 +118,14 @@ public class SeckillTest {
         public void run() {
             try {
                 // 等待放行，模拟并发
-                start.await();
+                startLatch.await();
             } catch (InterruptedException e) {
                 log.error(e.getMessage());
             }
+            // 执行
             log.info(StrUtil.format("==> [ {} ] {}\t 秒杀 {} , 结果: {}"),
                     Thread.currentThread().getId(), user, amount, lock.seckill(amount));
-            end.countDown();
+            endLatch.countDown();
         }
     }
 }
