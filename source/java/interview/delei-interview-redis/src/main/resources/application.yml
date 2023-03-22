@@ -21,17 +21,20 @@ spring:
     port: 6379
     password: deleiguo
     timeout: 10000
-    # jedis
-    jedis:
-      pool:
-        max-active: 50
-        max-wait: 5000
-        max-idle: 20
-        min-idle: 20
     # 连接池
     lettuce:
       pool:
-        max-active: 50
-        max-wait: 5000
-        max-idle: 20
-        min-idle: 20
+        max-active: 100
+        max-wait: 60000
+        max-idle: 100
+        min-idle: 10
+    # redisson
+    redisson:
+      config: |
+        singleServerConfig:
+          password: deleiguo
+          timeout: 10000
+          database: 10
+          address: redis://server.deleiguo.com:6379
+        codec: !<org.redisson.client.codec.StringCodec> { }
+        transportMode: "NIO"

@@ -1,8 +1,9 @@
 package cn.delei.redis;
 
+import cn.delei.util.PrintUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,91 +13,109 @@ import javax.annotation.Resource;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 秒杀模拟测试
+ *
+ * @author deleiguo
+ */
 @SpringBootTest
 public class SeckillTest {
-
+    private static final Logger log = LoggerFactory.getLogger(SeckillTest.class);
     @Resource
     private IDistributedLocker jedisLock;
     @Resource
     private IDistributedLocker redissonLock;
 
     @Test
-    public void jedisSeckill() throws Exception {
-
-        // 设置库存
-        jedisLock.setStock(20, TimeUnit.SECONDS, 600);
-
-        CountDownLatch start = new CountDownLatch(1);
-        CountDownLatch countDownLatch = new CountDownLatch(10);
-        for (int i = 1; i <= 10; i++) {
-            new Thread(new SeckillTaskRunnable(start, countDownLatch,
-                    jedisLock, "UT-" + i)).start();
-        }
-        start.countDown();
-        countDownLatch.await();
+    public void jedisTest() throws Exception {
+        long leaseTime = 600L;
+        seckill(jedisLock, TimeUnit.SECONDS, leaseTime, 20, 10, true);
+        seckill(jedisLock, TimeUnit.SECONDS, leaseTime, 6, 8, false);
     }
 
     @Test
-    public void setStockTest() {
-        // 设置库存
-        Assertions.assertTrue(redissonLock.setStock(20, TimeUnit.SECONDS, 600));
+    public void redissonTest() throws Exception {
+        long leaseTime = 600L;
+        seckill(redissonLock, TimeUnit.SECONDS, leaseTime, 20, 10, true);
+        seckill(redissonLock, TimeUnit.SECONDS, leaseTime, 6, 8, false);
     }
 
-    @Test
-    public void redissonSeckill() throws Exception {
+    /**
+     * 通用模拟方法
+     *
+     * @param lock      lock具体实现
+     * @param unit      单位
+     * @param leaseTime key持续时间
+     * @param stock     库存总量
+     * @param users     模拟用户量
+     * @param isRandom  是否随机每用户下单的数量
+     * @throws Exception InterruptedException
+     */
+    private void seckill(IDistributedLocker lock, TimeUnit unit, long leaseTime, int stock,
+                         int users, boolean isRandom) throws Exception {
+        PrintUtil.printTitle(StrUtil.format("stock:{}  users:{}", stock, users));
         // 设置库存
-        redissonLock.setStock(20, TimeUnit.SECONDS, 600);
+        lock.setStock(stock, unit, leaseTime);
+
+        // 控制同时开始
         CountDownLatch start = new CountDownLatch(1);
-        CountDownLatch countDownLatch = new CountDownLatch(10);
-        for (int i = 1; i <= 10; i++) {
-            new Thread(new SeckillTaskRunnable(start, countDownLatch,
-                    redissonLock, "UT-" + i)).start();
+        // 控制所有线程运行结束
+        CountDownLatch end = new CountDownLatch(users);
+        int amount;
+        for (int i = 1; i <= users; i++) {
+            amount = isRandom ? RandomUtil.randomInt(1, stock / 2) : 1;
+            new Thread(new SeckillTaskRunnable(start, end,
+                    lock, "UT-" + i, amount)).start();
         }
         start.countDown();
-        countDownLatch.await();
+        end.await();
+        TimeUnit.SECONDS.sleep(1L);
     }
+    
+    /**
+     * 任务 Runnable
+     */
+    static class SeckillTaskRunnable implements Runnable {
+        private CountDownLatch start;
+        private CountDownLatch end;
+        /**
+         * 锁
+         */
+        private IDistributedLocker lock;
+        /**
+         * 用户
+         */
+        private String user;
+        /**
+         * 下单数量
+         */
+        private int amount;
 
-}
-
-
-class SeckillTaskRunnable implements Runnable {
-
-    private static final Logger log = LoggerFactory.getLogger(RedissonTaskRunnable.class);
-
-    private CountDownLatch start;
-    private CountDownLatch countDownLatch;
-    private IDistributedLocker lock;
-    private String user;
-
-    public SeckillTaskRunnable(CountDownLatch start, CountDownLatch countDownLatch,
-                               IDistributedLocker lock, String user) {
-        this.start = start;
-        this.countDownLatch = countDownLatch;
-        this.lock = lock;
-        this.user = user;
-    }
-
-    @Override
-    public void run() {
-        // 每人秒杀数量
-        int amount = RandomUtil.randomInt(1, 3);
-        try {
-            start.await();
-        } catch (InterruptedException e) {
-            log.error(e.getMessage());
+        public SeckillTaskRunnable(CountDownLatch start, CountDownLatch end,
+                                   IDistributedLocker lock, String user, int amount) {
+            Assert.notNull(start);
+            Assert.notNull(lock);
+            Assert.notBlank(user);
+            Assert.isTrue(amount > 0);
+            this.start = start;
+            this.end = end;
+            this.lock = lock;
+            this.user = user;
+            this.amount = amount;
         }
-        boolean flag = false;
-        Thread current = Thread.currentThread();
-        do {
-            String result = lock.seckill(amount);
-            if ("1".equals(result)) {
-                flag = true;
-                log.info(StrUtil.format("==> {}\t {}\t 秒杀 {}"),
-                        current.getId(), user, amount);
-            } else if ("-1".equals(result)) {
-                flag = true;
+
+        @Override
+        public void run() {
+            try {
+                // 等待放行，模拟并发
+                start.await();
+            } catch (InterruptedException e) {
+                log.error(e.getMessage());
             }
-        } while (!flag);
-        countDownLatch.countDown();
+            log.info(StrUtil.format("==> [ {} ] {}\t 秒杀 {} , 结果: {}"),
+                    Thread.currentThread().getId(), user, amount, lock.seckill(amount));
+            end.countDown();
+        }
     }
 }
+

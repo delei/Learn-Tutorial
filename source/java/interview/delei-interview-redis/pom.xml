@@ -90,7 +90,7 @@
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
-            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <artifactId>netty-all</artifactId>
         </dependency>
         <!-- 便于可执行jar源码阅读 -->
         <dependency>

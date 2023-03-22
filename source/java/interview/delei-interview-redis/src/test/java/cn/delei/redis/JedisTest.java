@@ -72,7 +72,7 @@ public class JedisTest {
 
     @Test
     public void lockTest() {
-        String lockKey = "lock_order";
+        String lockKey = "jedis_lock_order";
         String lockValue = 100 + "";
         long lockTime = 5L;
         int retry = 3;

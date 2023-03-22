@@ -1,6 +1,5 @@
 package cn.delei.redis.jedis;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
@@ -8,21 +7,29 @@ import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import javax.annotation.Resource;
+
+/**
+ * Jedis Configuration
+ *
+ * @author deleiguo
+ */
 @Configuration
 public class JedisAutoConfiguration {
 
-    @Autowired
+    @Resource
     private RedisProperties redisProperties;
 
     @Bean
     @ConditionalOnMissingBean(JedisPool.class)
     public JedisPool jedisPool() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(redisProperties.getJedis().getPool().getMaxIdle());
-        jedisPoolConfig.setMinIdle(redisProperties.getJedis().getPool().getMinIdle());
-        jedisPoolConfig.setMaxWaitMillis(redisProperties.getJedis().getPool().getMaxWait().toMillis());
+        jedisPoolConfig.setMaxTotal(redisProperties.getLettuce().getPool().getMaxActive());
+        jedisPoolConfig.setMaxIdle(redisProperties.getLettuce().getPool().getMaxIdle());
+        jedisPoolConfig.setMinIdle(redisProperties.getLettuce().getPool().getMinIdle());
+        jedisPoolConfig.setMaxWaitMillis(redisProperties.getLettuce().getPool().getMaxWait().toMillis());
         jedisPoolConfig.setTestOnCreate(false);
-        jedisPoolConfig.setTestOnBorrow(true);
+        jedisPoolConfig.setTestOnBorrow(false);
         return new JedisPool(jedisPoolConfig,
                 redisProperties.getHost(),
                 redisProperties.getPort(),
