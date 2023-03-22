@@ -27,7 +27,7 @@ public class JedisLock implements IDistributedLocker {
     @Resource
     private JedisPool jedisPool;
 
-    private static final String LOCK_SUCCESS = "OK";
+    private static final String SET_SUCCESS = "OK";
     private static final String KEY_PREFIX = "jedis_";
     private static final Long RELEASE_SUCCESS = 1L;
 
@@ -50,7 +50,7 @@ public class JedisLock implements IDistributedLocker {
         setParams.nx();
         setParams.px(unit.toMillis(leaseTime));
         try (jedis) {
-            return LOCK_SUCCESS.equals(jedis.set(prefix() + lockKey, lockValue, setParams));
+            return SET_SUCCESS.equals(jedis.set(prefix() + lockKey, lockValue, setParams));
         }
     }
 
@@ -75,7 +75,7 @@ public class JedisLock implements IDistributedLocker {
             jedis.del(prefix() + SECKILL_KEY);
             String result = jedis.set(prefix() + SECKILL_KEY, String.valueOf(amount),
                     SetParams.setParams().nx().px(unit.toMillis(leaseTime)));
-            return "OK".equals(result);
+            return SET_SUCCESS.equals(result);
         }
     }
 

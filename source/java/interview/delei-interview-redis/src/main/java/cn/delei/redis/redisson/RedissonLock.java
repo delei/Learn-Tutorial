@@ -2,7 +2,6 @@ package cn.delei.redis.redisson;
 
 import cn.delei.redis.IDistributedLocker;
 import cn.hutool.core.lang.Assert;
-import org.redisson.api.RBucket;
 import org.redisson.api.RLock;
 import org.redisson.api.RScript;
 import org.redisson.api.RedissonClient;
@@ -51,8 +50,7 @@ public class RedissonLock implements IDistributedLocker {
     @Override
     public boolean setStock(int amount, TimeUnit unit, long leaseTime) {
         Assert.isTrue(amount > 0);
-        RBucket<Integer> bucket = redissonClient.getBucket(prefix() + SECKILL_KEY);
-        bucket.set(amount, leaseTime, unit);
+        redissonClient.getBucket(prefix() + SECKILL_KEY).set(amount, leaseTime, unit);
         return true;
     }
 
@@ -61,8 +59,9 @@ public class RedissonLock implements IDistributedLocker {
         Assert.isTrue(amount > 0);
         // 执行 lua 文件
         RScript rScript = redissonClient.getScript();
-        String sha1 = rScript.scriptLoad(loadSeckillScript());
-        return rScript.evalSha(RScript.Mode.READ_WRITE, sha1, RScript.ReturnType.VALUE,
+        return rScript.evalSha(RScript.Mode.READ_WRITE,
+                rScript.scriptLoad(loadSeckillScript()),
+                RScript.ReturnType.VALUE,
                 Collections.singletonList(prefix() + SECKILL_KEY),
                 String.valueOf(amount));
     }
