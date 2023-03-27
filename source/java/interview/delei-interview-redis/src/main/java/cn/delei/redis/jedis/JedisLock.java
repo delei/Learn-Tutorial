@@ -45,18 +45,19 @@ public class JedisLock implements IDistributedLocker {
     @Override
     public boolean tryLock(String lockKey, String lockValue, TimeUnit unit, long leaseTime) {
         Assert.notBlank(lockKey);
+
         Jedis jedis = getJedis();
-        SetParams setParams = new SetParams();
-        setParams.nx();
-        setParams.px(unit.toMillis(leaseTime));
+        // Set key value nx px
         try (jedis) {
-            return SET_SUCCESS.equals(jedis.set(prefix() + lockKey, lockValue, setParams));
+            return SET_SUCCESS.equals(jedis.set(prefix() + lockKey, lockValue,
+                    SetParams.setParams().nx().px(unit.toMillis(leaseTime))));
         }
     }
 
     @Override
     public boolean unlock(String lockKey, String lockValue) {
         Assert.notBlank(lockKey);
+        // lua script
         String script = "if redis.call('get', KEYS[1]) == ARGV[1] then " +
                 "return redis.call('del', KEYS[1]); else return 0 end;";
         Jedis jedis = getJedis();

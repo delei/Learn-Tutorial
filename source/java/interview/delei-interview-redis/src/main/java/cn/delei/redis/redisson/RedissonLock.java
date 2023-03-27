@@ -5,6 +5,8 @@ import cn.hutool.core.lang.Assert;
 import org.redisson.api.RLock;
 import org.redisson.api.RScript;
 import org.redisson.api.RedissonClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,6 +20,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class RedissonLock implements IDistributedLocker {
+    private static final Logger log = LoggerFactory.getLogger(RedissonLock.class);
 
     private static final String KEY_PREFIX = "redisson_";
     @Resource
@@ -35,7 +38,7 @@ public class RedissonLock implements IDistributedLocker {
         try {
             return lock.tryLock(20L, leaseTime, unit);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return false;
     }

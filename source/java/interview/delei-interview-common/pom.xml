@@ -34,10 +34,17 @@
             <version>${util.fastjson.version}</version>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>com.alibaba.fastjson2</groupId>-->
-        <!--            <artifactId>fastjson2</artifactId>-->
-        <!--            <version>${util.fastjson.version}</version>-->
-        <!--        </dependency>-->
+        <!--  jmh -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>${jmh.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>${jmh.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

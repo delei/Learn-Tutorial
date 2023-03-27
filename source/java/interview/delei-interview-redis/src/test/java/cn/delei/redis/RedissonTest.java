@@ -1,5 +1,7 @@
 package cn.delei.redis;
 
+import cn.hutool.core.thread.ConcurrencyTester;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -7,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
@@ -16,59 +17,38 @@ public class RedissonTest {
     @Resource
     private IDistributedLocker redissonLock;
 
+    /**
+     * 分布式锁
+     */
     @Test
-    public void lockTest() throws Exception {
-        CountDownLatch start = new CountDownLatch(1);
-        CountDownLatch countDownLatch = new CountDownLatch(10);
-        for (int i = 1; i <= 10; i++) {
-            new Thread(new RedissonTaskRunnable(start, countDownLatch,
-                    redissonLock, "UT-" + i)).start();
-        }
-        start.countDown();
-        countDownLatch.await();
-    }
+    public void lockTest() {
+        // 固定 key
+        String lockKey = "lock_order";
+        long lockTime = 5L;
 
-    static class RedissonTaskRunnable implements Runnable {
-        private CountDownLatch start;
-        private CountDownLatch end;
-        private IDistributedLocker lock;
-        private String user;
-
-        public RedissonTaskRunnable(CountDownLatch start, CountDownLatch end,
-                                    IDistributedLocker lock, String user) {
-            this.start = start;
-            this.end = end;
-            this.lock = lock;
-            this.user = user;
-        }
-
-        @Override
-        public void run() {
-            String lockKey = "lock_order";
-            long lockTime = 10L;
+        // 模拟并行
+        ConcurrencyTester tester = ThreadUtil.concurrencyTest(15, () -> {
+            long tId = Thread.currentThread().getId();
             try {
-                start.await();
                 boolean flag;
-                Thread current = Thread.currentThread();
                 do {
-                    flag = lock.tryLock(lockKey, null, TimeUnit.SECONDS, lockTime);
+                    flag = redissonLock.tryLock(lockKey, null, TimeUnit.SECONDS, lockTime);
                     if (flag) {
-                        log.info(StrUtil.format("==> {}\t {}\t 得到了 lock"),
-                                current.getId(), user);
-                        // 模拟业务逻辑处理时间
+                        log.info(StrUtil.format("==> {}\t 得到了 lock"), tId);
+                        // 模拟业务逻辑处理时间，必须小于 lockTime
                         try {
-                            TimeUnit.SECONDS.sleep(lockTime - 5L);
+                            TimeUnit.SECONDS.sleep(lockTime - 3L);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
                 } while (!flag);
-                end.countDown();
-            } catch (Exception e) {
-                log.error(e.getMessage());
             } finally {
-                lock.unlock(lockKey, null);
+                redissonLock.unlock(lockKey, null);
             }
-        }
+        });
+        // 执行时间(毫秒)
+        log.info(String.valueOf(tester.getInterval()));
     }
+
 }
