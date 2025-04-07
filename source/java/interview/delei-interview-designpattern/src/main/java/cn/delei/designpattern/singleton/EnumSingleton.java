@@ -6,18 +6,18 @@ package cn.delei.designpattern.singleton;
  *
  * @author deleiguo
  */
-public class Singleton_7 {
+public class EnumSingleton {
 
     static enum SingletonEnum {
         INSTANCE;
 
-        private Singleton_7 singleton;
+        private EnumSingleton singleton;
 
         private SingletonEnum() {
-            singleton = new Singleton_7();
+            singleton = new EnumSingleton();
         }
 
-        public Singleton_7 getInstnce() {
+        public EnumSingleton getInstnce() {
             return singleton;
         }
     }
@@ -27,7 +27,7 @@ public class Singleton_7 {
      *
      * @return Singleton_6 实例
      */
-    public static Singleton_7 getInstance() {
+    public static EnumSingleton getInstance() {
         return SingletonEnum.INSTANCE.getInstnce();
     }
 }
